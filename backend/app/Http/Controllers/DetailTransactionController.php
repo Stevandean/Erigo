@@ -18,7 +18,7 @@ class DetailTransactionController extends Controller
     {
         return response()->json([
             'success' => true,
-            'message' => 'Show all data',
+            'message' => 'Show all datas',
             'data' => $DetailTransaction::all()
         ], 200);
     }
