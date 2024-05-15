@@ -12,7 +12,7 @@ const MainLayout: FC<Props> = ({ children }) => {
     <>
       <Navbar />
 
-      <main className="mt-28 mb-24">{children}</main>
+      <main className="mt-20">{children}</main>
 
       <Footer />
     </>

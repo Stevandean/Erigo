@@ -57,12 +57,12 @@ const Navbar: FC = () => {
   return (
     <header className="bg-transparent shadow-lg absolute top-0 left-0 w-full flex items-center z-10">
       <div className="container">
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto">
           <div className="flex items-center justify-between relative">
-            <div className="px-4">
+            <div>
               <Link href="/" legacyBehavior>
                 <a
-                  className="inline-flex items-center gap-2 font-primary font-bold text-xl lg:text-2xl py-6 uppercase"
+                  className="inline-flex items-center gap-2 font-black text-2xl lg:text-3xl py-3 uppercase"
                   aria-label="logo"
                 >
                   {/* <img
@@ -74,7 +74,7 @@ const Navbar: FC = () => {
                 </a>
               </Link>
             </div>
-            <div className="flex items-center px-4">
+            <div className="flex items-center ">
               <button
                 id="hamburger"
                 name="hamburger"
@@ -92,7 +92,6 @@ const Navbar: FC = () => {
                   className={`${styles.hamburgerLine} origin-bottom-left transition duration-300 ease-in-out`}
                 ></span>
               </button>
-
               <nav
                 id="navMenu"
                 className="hidden absolute py-5 bg-white shadow-lg rounded-lg max-w-[250px] w-full right-4 top-full lg:block lg:static lg:bg-transparent lg:max-w-full lg:shadow-none lg:rounded-none"
@@ -104,7 +103,7 @@ const Navbar: FC = () => {
                         <a
                           className={cn(
                             isMenuActive(a.path) ? "text-navy" : "text-gray",
-                            "font-secondary font-semibold text-base py-2 mx-8 lg:mx-2 flex group-hover:text-navy transition duration-300 ease-in-out"
+                            "font-bold text-xl py-2 mx-8 lg:mx-2 flex group-hover:text-navy transition duration-300 ease-in-out"
                           )}
                         >
                           {a.title}
@@ -146,7 +145,7 @@ const Navbar: FC = () => {
                   ) : (
                     <li></li>
                   )} */}
-                  <li className="mx-2">|</li>
+                  <li className="mx-2 hidden xl:block">|</li>
 
                   {localStorage.getItem("userAcc") ? (
                     <>
