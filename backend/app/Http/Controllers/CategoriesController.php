@@ -18,7 +18,7 @@ class CategoriesController extends Controller
     {
         return response()->json([
             'success' => true,
-            'message' => 'Show all data',
+            'message' => 'Success show all data!',
             'data' => $categories::all()
         ], 200);
     }
@@ -106,13 +106,13 @@ class CategoriesController extends Controller
         if ($update) {
             return Response()->json([
                 'status' => 1,
-                'message' => 'Success updating data !',
+                'message' => 'Success updating data!',
                 'data' => $data
             ]);
         } else {
             return Response()->json([
                 'status' => 0,
-                'message' => 'Failed updating data !'
+                'message' => 'Failed updating data!'
             ]);
         }
     }
@@ -122,19 +122,17 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $delete = DB::table('categories')
-            ->where('categories_id', '=', $id)
-            ->delete();
+        $delete = DB::table('categories')->where('categories_id', '=', $id)->delete();
 
         if ($delete) {
             return Response()->json([
                 'status' => 1,
-                'message' => 'Success delete data !'
+                'message' => 'Success delete data!'
             ]);
         } else {
             return Response()->json([
                 'status' => 0,
-                'message' => 'Failed delete data !'
+                'message' => 'Failed delete data!'
             ]);
         }
     }
