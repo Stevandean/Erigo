@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\ProductController;
@@ -19,26 +20,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::prefix('v1')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::get('/refresh', [AuthController::class, 'refresh']);
+        Route::put('/update', [AuthController::class, 'update']);
+        Route::delete('/delete-account', [AuthController::class, 'deletemyaccount']);
+        Route::get('/user', [AuthController::class, 'user']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+
+    Route::get('/hello', function () {
+        return response()->json([
+            'message' => 'helo'
+        ]);
+    });
+
+    Route::apiResources([
+        '/categories' => CategoriesController::class,
+        'detail_transaction' => DetailTransactionController::class,
+        '/product' => ProductController::class,
+        'rating' => RatingController::class,
+        'transaction' => TransactionController::class,
+    ]);
 });
-
-Route::apiResources([
-    'categories' => CategoriesController::class,
-]);
-
-Route::apiResources([
-    'detail_transaction' => DetailTransactionController::class,
-]);
-
-Route::apiResources([
-    'product' => ProductController::class,
-]);
-
-Route::apiResources([
-    'rating' => RatingController::class,
-]);
-
-Route::apiResources([
-    'transaction' => TransactionController::class,
-]);
