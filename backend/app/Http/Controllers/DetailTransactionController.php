@@ -11,25 +11,27 @@ use Illuminate\Support\Facades\Auth;
 
 class DetailTransactionController extends Controller
 {
-   /**
+    /**
      * Show all data
      */
-    public function index(DetailTransaction $DetailTransaction)
+    public function index(DetailTransaction $detail_transaction)
     {
         return response()->json([
             'success' => true,
-            'message' => 'Show all datas',
-            'data' => $DetailTransaction::all()
+            'message' => 'Success show all data!',
+            'data' => $detail_transaction::all()
         ], 200);
     }
-     /**
+    /**
      * Create data
      */
-    public function store(Request $request, DetailTransaction $DetailTransaction)
+    public function store(Request $request, DetailTransaction $detail_transaction)
     {
         $validator = Validator::make(
             $request->all(),
             [
+                'transaction_id' => 'required',
+                'product_id' => 'required',
                 'quantity' => 'required',
                 'total_price' => 'required'
             ]
@@ -39,13 +41,15 @@ class DetailTransactionController extends Controller
             return Response()->json($validator->errors());
         }
 
-        $store = $categories::create([
+        $store = $detail_transaction::create([
+            'transaction_id' => $request->transaction_id,
+            'product_id' => $request->product_id,
             'quantity' => $request->quantity,
             'total_price' => $request->total_price
 
         ]);
 
-        $data = $categories::where('quantity', '=', $request->quantity)->get();
+        $data = $detail_transaction::where('quantity', '=', $request->quantity)->get();
         if ($store) {
             return Response()->json([
                 'status' => 1,
@@ -62,10 +66,10 @@ class DetailTransactionController extends Controller
     /**
      * Show data by id
      */
-    public function show(DetailTransaction $DetailTransaction, $detail_transaction_id)
+    public function show(DetailTransaction $detail_transaction, $detail_transaction_id)
     {
-        if ($DetailTransaction::where('detail_transaction_id', $detail_transaction_id)->exists()) {
-            $data = $DetailTransaction::where('DetailTransaction.detail_transaction_id', '=', $detail_transaction_id)->get();
+        if ($detail_transaction::where('detail_transaction_id', $detail_transaction_id)->exists()) {
+            $data = $detail_transaction::join('transaction', 'transaction.transaction_id', '=', 'detail_transaction.transaction_id')->where('detail_transaction_id', $detail_transaction_id)->get();
 
             return response()->json([
                 'success' => true,
@@ -83,11 +87,13 @@ class DetailTransactionController extends Controller
     /**
      * Update data
      */
-    public function update(Request $request, DetailTransaction $DetailTransaction, $detail_transaction_id)
+    public function update(Request $request, DetailTransaction $detail_transaction, $detail_transaction_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
+                'transaction_id' => 'required',
+                'product_id' => 'required',
                 'quantity' => 'required',
                 'total_price' => 'required'
             ]
@@ -100,44 +106,43 @@ class DetailTransactionController extends Controller
         $update = DB::table('detail_transaction')
             ->where('detail_transaction_id', '=', $detail_transaction_id)
             ->update([
+                'transaction_id' => $request->transaction_id,
+                'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
                 'total_price' => $request->total_price
             ]);
 
-        $data = $categories::where('detail_transaction_id', '=', $detail_transaction_id)->get();
+        $data = $detail_transaction::where('detail_transaction_id', '=', $detail_transaction_id)->get();
         if ($update) {
             return Response()->json([
                 'status' => 1,
-                'message' => 'Success updating data !',
+                'message' => 'Success updating data!',
                 'data' => $data
             ]);
         } else {
             return Response()->json([
                 'status' => 0,
-                'message' => 'Failed updating data !'
+                'message' => 'Failed updating data!'
             ]);
         }
     }
-     /**
+    /**
      * Delete data
      */
     public function destroy($id)
     {
-        $delete = DB::table('detail_transaction')
-            ->where('detail_transaction_id', '=', $id)
-            ->delete();
+        $delete = DB::table('detail_transaction')->where('detail_transaction_id', '=', $id)->delete();
 
         if ($delete) {
             return Response()->json([
                 'status' => 1,
-                'message' => 'Success delete data !'
+                'message' => 'Success delete data!'
             ]);
         } else {
             return Response()->json([
                 'status' => 0,
-                'message' => 'Failed delete data !'
+                'message' => 'Failed delete data!'
             ]);
         }
     }
 }
-
