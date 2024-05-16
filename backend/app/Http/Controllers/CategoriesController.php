@@ -96,11 +96,9 @@ class CategoriesController extends Controller
             return Response()->json($validator->errors());
         }
 
-        $update = DB::table('categories')
-            ->where('categories_id', '=', $categories_id)
-            ->update([
-                'categories_name' => $request->categories_name
-            ]);
+        $update = DB::table('categories')->where('categories_id', '=', $categories_id)->update([
+            'categories_name' => $request->categories_name
+        ]);
 
         $data = $categories::where('categories_id', '=', $categories_id)->get();
         if ($update) {
