@@ -18,15 +18,15 @@ const ContainerHome: FC = () => {
         <div className="flex justify-center">
           <hr className="border-2 w-[80%] xl:w-[90%]" />
         </div>
+        <div className="flex justify-center">
+          <hr className="border-2 w-[80%] xl:w-[90%]" />
+        </div>
+        <Collection />
+        <div className="flex justify-center">
+          <hr className="border-2 w-[80%] xl:w-[90%]" />
+        </div>
+        <FeaturedProduct />
       </section>
-      <div className="flex justify-center">
-        <hr className="border-2 w-[80%] xl:w-[90%]" />
-      </div>
-      <Collection />
-      <div className="flex justify-center">
-        <hr className="border-2 w-[80%] xl:w-[90%]" />
-      </div>
-      <FeaturedProduct />
     </MainLayout>
   );
 };

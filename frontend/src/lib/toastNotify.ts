@@ -1,18 +1,18 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export const errorToast = (message: string) => {
+export const errorToast = (message: string | any) => {
   toast.error(message);
 };
 
-export const successToast = (message: string) => {
+export const successToast = (message: string | any) => {
   toast.success(message);
 };
 
-export const infoToast = (message: string) => {
+export const infoToast = (message: string | any) => {
   toast.info(message);
 };
 
-export const warningToast = (message: string) => {
+export const warningToast = (message: string | any) => {
   toast.warning(message);
 };

@@ -1,128 +1,190 @@
-import { FC } from 'react';
-import Link from 'next/link';
+"use client";
 
-import { PageSEO } from '@/components/Common/SEO';
-import { siteMetadata } from '@/data/siteMetadata';
-import MainLayout from '@/layouts/MainLayout';
-import useStore from '@/store/auth';
+import { FC, FormEvent, useState } from "react";
+import Link from "next/link";
 
-/**
- * To do list ContainerRegister:
- * state ✅
- * API consume register ❌
- */
+import { User } from "@/interfaces/user";
+import { isAxiosError, useAxios } from "@/hooks/useAxios";
+import { errorToast, successToast } from "@/lib/toastNotify";
+import { useRouter } from "next/navigation";
 
 const ContainerRegister: FC = () => {
-  const store = useStore((state) => state);
+  const [data, setData] = useState<User>({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    password: "",
+  });
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const axios = useAxios();
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (data.password !== confirmPassword) {
+      errorToast("Your password isn't same, please try again!");
+    } else {
+      const sendData = { ...data };
+
+      try {
+        const { data } = await axios.post("/auth/register", sendData);
+
+        successToast(data.message);
+
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 1500);
+      } catch (err) {
+        if (isAxiosError(err)) {
+          errorToast(err.response?.data?.message || "An error occurred");
+        } else {
+          errorToast("An unexpected error occurred");
+        }
+      }
+    }
+  };
 
   return (
-    <>
-      <PageSEO
-        title={`Daftar - ${siteMetadata.title}`}
-        description={siteMetadata.description}
-      />
-
-      <MainLayout>
-        <section className="max-w-7xl mx-auto">
-          <div className="container">
-            <div className="flex flex-col lg:flex-row items-center justify-between">
-              <div className="mb-10 lg:mb-0 w-full px-4 mx-5 lg:w-1/2">
-                <img
-                  src="/assets/svg/undraw_register.svg"
-                  loading="lazy"
-                  alt="Hero Illustration"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-
-              <div className="w-full px-4 mx-5 lg:w-1/2">
-                <div className="flex items-center justify-center mb-5">
-                  <h1 className="font-teal-500 font-semibold text-2xl lg:text-3xl text-center">
-                    Selamat Datang!
-                  </h1>
-                </div>
-
-                <form className="bg-white rounded-lg shadow-lg p-8">
-                  {/* {notifiedSuccess === 1 && (
-                      <div className="mb-4 bg-green-500 p-3 rounded">
-                        <p className="text-white text-sm font-bold">
-                          Login Sukses, Selamat datang kembali!
-                        </p>
-                      </div>
-                    )}
-
-                    {notifiedSuccess === 2 && (
-                      <div className="mb-4 bg-red-500 p-3 rounded">
-                        <p className="text-white text-sm font-bold">
-                          Username atau Password salah, silakan coba kembali!
-                        </p>
-                      </div>
-                    )} */}
-
-                  <div className="mb-3">
-                    <label
-                      htmlFor="email"
-                      className="block text-slate-600 mb-2"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-teal-500/70"
-                      placeholder="Masukkan email"
-                      autoFocus={true}
-                      required
-                      value={store.email}
-                      onChange={(e) => store.setEmail(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label
-                      htmlFor="password"
-                      className="block text-slate-600 mb-2"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-teal-500/70"
-                      placeholder="Masukkan password"
-                      required
-                      value={store.password}
-                      onChange={(e) => store.setPassword(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <button
-                      type="button"
-                      onClick={() => store.onSubmit(store.auth)}
-                      className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg font-bold transition duration-300 ease-in-out mt-3"
-                    >
-                      Daftar
-                    </button>
-                  </div>
-                </form>
-
-                <div className="flex items-center justify-center mt-5">
-                  <p className="text-slate-600">
-                    Sudah mempunyai akun?{' '}
-                    <Link href="/login" legacyBehavior>
-                      <a className="text-teal-500 font-bold">Masuk</a>
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
+    <main className="bg-[#F9FAFB] min-h-screen flex items-center justify-center">
+      <section className="bg-white max-w-lg mx-auto rounded-2xl p-[50px] w-5/6 xl:w-full">
+        <div className="flex items-center justify-center">
+          <h1 className="text-black text-4xl font-extrabold">ERIGO</h1>
+        </div>
+        <div className="mt-[20px] flex items-center justify-center">
+          <h2 className="text-black text-xl font-bold">Create your account</h2>
+        </div>
+        <form className="mt-[20px]" onSubmit={handleSubmit}>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label htmlFor="name" className="font-medium text-xs mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="border border-black rounded-lg w-full h-[30px]"
+              value={data.name}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  name: e.target.value,
+                })
+              }
+            />
           </div>
-        </section>
-      </MainLayout>
-    </>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label htmlFor="address" className="font-medium text-xs mb-2">
+              Address
+            </label>
+            <input
+              type="text"
+              name="address"
+              id="address"
+              className="border border-black rounded-lg w-full h-[50px]"
+              value={data.address}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  address: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label htmlFor="phone" className="font-medium text-xs mb-2">
+              Phone
+            </label>
+            <input
+              type="text"
+              name="phone"
+              id="phone"
+              className="border border-black rounded-lg w-full h-[30px]"
+              value={data.phone}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  phone: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label htmlFor="email" className="font-medium text-xs mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="border border-black rounded-lg w-full h-[30px]"
+              value={data.email}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  email: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label htmlFor="password" className="font-medium text-xs mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="border border-black rounded-lg w-full h-[30px]"
+              value={data.password}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  password: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="flex flex-col items-start mb-[15px]">
+            <label
+              htmlFor="confirm_password"
+              className="font-medium text-xs mb-2"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              className="border border-black rounded-lg w-full h-[30px]"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col items-start mb-[20px]">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-250 ease-linear text-white h-[35px] mt-[5px] rounded-lg font-semibold flex items-center justify-center"
+            >
+              create your account
+            </button>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <p className="font-medium text-sm text-[#757575]">
+              Already have account?{" "}
+              <Link
+                href="/auth/login"
+                className="text-blue-500 hover:text-blue-600 transition-all duration-250 ease-linear"
+              >
+                login
+              </Link>
+            </p>
+          </div>
+        </form>
+      </section>
+    </main>
   );
 };
 
