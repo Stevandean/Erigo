@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+
 import { AuthProvider } from "@/context/AuthContext";
 
 // const inter = Inter({ subsets: ['latin'] });
@@ -41,6 +42,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link
+        rel="shortcut icon"
+        href="//erigostore.co.id/cdn/shop/files/New_Logo_Erigo_81faf464-002f-434b-bae0-632202133822_32x32.png?v=1692002740"
+        type="image/png"
+      />
       <AuthProvider>
         <body className={inter.className}>
           {/* navbar */}
