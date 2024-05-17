@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 // const inter = Inter({ subsets: ['latin'] });
 const inter = Poppins({
@@ -40,18 +41,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {/* navbar */}
+      <AuthProvider>
+        <body className={inter.className}>
+          {/* navbar */}
 
-        {/* toast container */}
-        <ToastContainer />
+          {/* toast container */}
+          <ToastContainer />
 
-        {/* scroll to top */}
+          {/* scroll to top */}
 
-        {children}
+          {children}
 
-        {/* footer */}
-      </body>
+          {/* footer */}
+        </body>
+      </AuthProvider>
     </html>
   );
 }

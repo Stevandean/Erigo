@@ -7,11 +7,15 @@ import Link from "next/link";
 import styles from "./Navbar.module.css";
 import { headerNavLinks } from "@/data/headerNavLinks";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  console.log(user);
 
   // Navbar fixed position if scrolling
   useEffect(() => {
@@ -147,7 +151,7 @@ const Navbar: FC = () => {
                   )} */}
                   <li className="mx-2 hidden xl:block">|</li>
 
-                  {localStorage.getItem("userAcc") ? (
+                  {user ? (
                     <>
                       <li className="mx-2">
                         <a
