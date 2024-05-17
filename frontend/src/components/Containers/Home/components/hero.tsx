@@ -6,7 +6,7 @@ const Hero: FC = () => {
       <img
         className="w-5/6 xl:h-[650px]"
         src="./assets/img/heroBanner.png"
-        alt="Hero Banner"
+        alt=""
       />
     </div>
   );
