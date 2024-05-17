@@ -51,12 +51,6 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     try {
       const { data } = await axios.get("auth/user");
-      /**
-       * permasalahannya disini
-       * setUser(data.user);
-       * 
-       * harusnya setUser(data); doang
-       * */ 
       setUser(data);
     } catch (error) {
       console.error(error);
@@ -91,7 +85,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       }}
     >
       {children}
- 45   </AuthContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
