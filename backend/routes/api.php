@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,7 @@ Route::prefix('v1')->group(function () {
         '/product' => ProductController::class,
         '/rating' => RatingController::class,
         '/transaction' => TransactionController::class,
+        '/users' => UsersController::class
     ]);
 
     Route::post('/product/updateimage/{id}', [ProductController::class, 'updateimage'])->name('product.updateimage');

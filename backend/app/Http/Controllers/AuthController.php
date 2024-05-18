@@ -129,11 +129,11 @@ class AuthController extends Controller
     public function update(Request $request, Users $usr)
     {
         $validator = Validator::make($request->all(), [
-            'nama_lengkap' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'type' => 'required|integer'
         ]);
 
         if ($validator->fails()) {

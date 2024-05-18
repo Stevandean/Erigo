@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CategoriesController extends Controller
 {
     /**
-     * Show all data
+     * Show all data.
      */
     public function index(Categories $categories)
     {
@@ -23,7 +23,7 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Create data
+     * Create data.
      */
     public function store(Request $request, Categories $categories)
     {
@@ -35,7 +35,7 @@ class CategoriesController extends Controller
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
         $store = $categories::create([
@@ -43,13 +43,13 @@ class CategoriesController extends Controller
         ]);
 
         if ($store) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success create new data!',
                 'data' => $store
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed create data!'
             ], 404);
@@ -57,7 +57,7 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Show data by id
+     * Show data by id.
      */
     public function show(Categories $categories, $categories_id)
     {
@@ -79,33 +79,33 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Update data
+     * Update data.
      */
     public function update(Request $request, Categories $categories, $categories_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'categories_name' => 'required'
+                'categories_name' => 'required|string'
             ]
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
-        $update = $categories::table('categories')->where('categories_id', '=', $categories_id)->update([
+        $update = $categories::table('categories')->where('categories_id', $categories_id)->update([
             'categories_name' => $request->categories_name
         ]);
 
         if ($update) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success updating data!',
                 'data' => $update
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
             ], 404);
@@ -113,19 +113,19 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Delete data
+     * Delete data.
      */
     public function destroy(Categories $categories, $categories_id)
     {
-        $delete = $categories::table('categories')->where('categories_id', '=', $categories_id)->delete();
+        $delete = $categories::table('categories')->where('categories_id', $categories_id)->delete();
 
         if ($delete) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success delete data!'
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
             ], 404);

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class DetailTransactionController extends Controller
 {
     /**
-     * show all data
+     * Show all data.
      */
     public function index(DetailTransaction $detail_transaction)
     {
@@ -23,7 +23,7 @@ class DetailTransactionController extends Controller
     }
 
     /**
-     * create data
+     * Create data.
      */
     public function store(Request $request, DetailTransaction $detail_transaction)
     {
@@ -38,7 +38,7 @@ class DetailTransactionController extends Controller
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
         $store = $detail_transaction::create([
@@ -50,20 +50,21 @@ class DetailTransactionController extends Controller
         ]);
 
         if ($store) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success create new data!',
                 'data' => $store
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed create data!'
             ], 404);
         }
     }
+
     /**
-     * show data by id
+     * Show data by id.
      */
     public function show($detail_transaction_id)
     {
@@ -88,26 +89,27 @@ class DetailTransactionController extends Controller
             ], 404);
         }
     }
+
     /**
-     * update data
+     * Update data.
      */
     public function update(Request $request, DetailTransaction $detail_transaction, $detail_transaction_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'transaction_id' => 'required',
-                'product_id' => 'required',
-                'quantity' => 'required',
-                'total_price' => 'required'
+                'transaction_id' => 'required|integer',
+                'product_id' => 'required|integer',
+                'quantity' => 'required|string',
+                'total_price' => 'required|string'
             ]
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
-        $update = $detail_transaction::table('detail_transaction')->where('detail_transaction_id', '=', $detail_transaction_id)->update([
+        $update = $detail_transaction::table('detail_transaction')->where('detail_transaction_id', $detail_transaction_id)->update([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
@@ -115,13 +117,13 @@ class DetailTransactionController extends Controller
         ]);
 
         if ($update) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success updating data!',
                 'data' => $update
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
             ], 404);
@@ -129,19 +131,19 @@ class DetailTransactionController extends Controller
     }
 
     /**
-     * delete data
+     * Delete data.
      */
     public function destroy(DetailTransaction $detail_transaction, $detail_transaction_id)
     {
-        $delete = $detail_transaction::table('detail_transaction')->where('detail_transaction_id', '=', $detail_transaction_id)->delete();
+        $delete = $detail_transaction::table('detail_transaction')->where('detail_transaction_id', $detail_transaction_id)->delete();
 
         if ($delete) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success delete data!'
             ], 288);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
             ], 404);

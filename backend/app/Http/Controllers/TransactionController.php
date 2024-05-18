@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class TransactionController extends Controller
 {
     /**
-     * show all data
+     * Show all data.
      */
     public function index(Transaction $transaction)
     {
@@ -23,14 +23,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * create data
+     * Create data.
      */
     public function store(Request $request, Transaction $transaction)
     {
         $validator = Validator::make($request->all(), [
-            'payment_method' => 'required',
-            'status_payment' => 'required',
-            'status_courier' => 'required',
+            'payment_method' => 'required|string',
+            'status_payment' => 'required|string',
+            'status_courier' => 'required|string',
             'users_id' => 'required|integer'
         ]);
 
@@ -63,7 +63,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * show data by id
+     * Show data by id.
      */
     public function show($transaction_id)
     {
@@ -89,18 +89,15 @@ class TransactionController extends Controller
     }
 
     /**
-     * update data
+     * Update data.
      */
     public function update(Request $request, Transaction $transaction, $transaction_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'receipt_number' => 'required',
-                'payment_method' => 'required',
-                'status_payment' => 'required',
-                'status_courier' => 'required',
-                'users_id' => 'required'
+                'status_payment' => 'required|string',
+                'status_courier' => 'required|string'
             ]
         );
 
@@ -108,12 +105,9 @@ class TransactionController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $transaction::table('transaction')->where('transaction_id', '=', $transaction_id)->update([
-            'receipt_number' => $request->receipt_number,
-            'payment_method' => $request->payment_method,
+        $update = $transaction::table('transaction')->where('transaction_id', $transaction_id)->update([
             'status_payment' => $request->status_payment,
-            'status_courier' => $request->status_courier,
-            'users_id' => $request->users_id
+            'status_courier' => $request->status_courier
         ]);
 
         if ($update) {
@@ -131,11 +125,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * delete data
+     * Delete data.
      */
     public function destroy(Transaction $transaction, $transaction_id)
     {
-        $delete = $transaction::table('transaction')->where('transaction_id', '=', $transaction_id)->delete();
+        $delete = $transaction::table('transaction')->where('transaction_id', $transaction_id)->delete();
 
         if ($delete) {
             return response()->json([
@@ -151,7 +145,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * generate random string for hashing request image filename.
+     * Generate random string for hashing request image filename.
      */
     protected function generateRandomString($length = 10)
     {

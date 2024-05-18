@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class RatingController extends Controller
 {
     /**
-     * show all data
+     * Show all data.
      */
     public function index(Rating $rating)
     {
@@ -23,7 +23,7 @@ class RatingController extends Controller
     }
 
     /**
-     * create data
+     * Create data.
      */
     public function store(Request $request, Rating $rating)
     {
@@ -38,7 +38,7 @@ class RatingController extends Controller
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
         $store = $rating::create([
@@ -49,13 +49,13 @@ class RatingController extends Controller
         ]);
 
         if ($store) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success create new data!',
                 'data' => $store
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed create data!'
             ], 404);
@@ -63,7 +63,7 @@ class RatingController extends Controller
     }
 
     /**
-     * show data by id
+     * Show data by id.
      */
     public function show($rating_id)
     {
@@ -90,25 +90,25 @@ class RatingController extends Controller
     }
 
     /**
-     * Update data
+     * Update data.
      */
     public function update(Request $request, Rating $rating, $rating_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'transaction_id' => 'required',
-                'product_id' => 'required',
-                'users_id' => 'required',
-                'rating' => 'required'
+                'transaction_id' => 'required|integer',
+                'product_id' => 'required|integer',
+                'users_id' => 'required|integer',
+                'rating' => 'required|string'
             ]
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
-        $update = $rating::table('rating')->where('rating_id', '=', $rating_id)->update([
+        $update = $rating::table('rating')->where('rating_id', $rating_id)->update([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'users_id' => $request->users_id,
@@ -116,13 +116,13 @@ class RatingController extends Controller
         ]);
 
         if ($update) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success updating data!',
                 'data' => $update
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
             ], 404);
@@ -130,19 +130,19 @@ class RatingController extends Controller
     }
 
     /**
-     * Delete data
+     * Delete data.
      */
     public function destroy(Rating $rating, $rating_id)
     {
-        $delete = $rating::table('rating')->where('rating_id', '=', $rating_id)->delete();
+        $delete = $rating::table('rating')->where('rating_id', $rating_id)->delete();
 
         if ($delete) {
-            return Response()->json([
+            return response()->json([
                 'status' => true,
                 'message' => 'Success delete data!'
             ], 200);
         } else {
-            return Response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
             ], 404);
