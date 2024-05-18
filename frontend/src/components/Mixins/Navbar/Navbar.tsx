@@ -154,10 +154,10 @@ const Navbar: FC = () => {
                   {user ? (
                     <>
                       <li className="mx-2">
-                        <a
+                        <Link
                           id="cartBtn"
                           className="flex items-center"
-                          href="./shopping_cart.php"
+                          href="/shopping-cart"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -177,33 +177,33 @@ const Navbar: FC = () => {
                             <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
                           </span>
-                        </a>
+                        </Link>
                       </li>
                       <li className="mx-2">
-                        <a href="./profile_settings.php" id="profileBtn">
+                        <Link href="/profile-settings" id="profileBtn">
                           <img
                             className="overflow-clip w-9 h-9 object-cover rounded-full"
                             src="./assets/img/products_2.png"
                             alt=""
                           />
-                        </a>
+                        </Link>
                       </li>
                     </>
                   ) : (
                     <>
                       <li className="mx-2">
-                        <a href="./login.php" id="loginBtn">
+                        <Link href="/auth/login" id="loginBtn">
                           Login
-                        </a>
+                        </Link>
                       </li>
                       <li className="mx-2">
-                        <a
-                          href="./register.php"
+                        <Link
+                          href="/auth/register"
                           id="registerBtn"
                           className="bg-navy px-3 py-1.5 rounded-lg text-white"
                         >
                           Register
-                        </a>
+                        </Link>
                       </li>
                     </>
                   )}
