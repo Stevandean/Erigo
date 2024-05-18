@@ -43,7 +43,7 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResources([
         '/categories' => CategoriesController::class,
-        '/detail_transaction' => DetailTransactionController::class,
+        '/detail-transaction' => DetailTransactionController::class,
         '/product' => ProductController::class,
         '/rating' => RatingController::class,
         '/transaction' => TransactionController::class,
