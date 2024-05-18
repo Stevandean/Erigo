@@ -6,7 +6,6 @@ use App\Models\Categories;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class CategoriesController extends Controller
@@ -31,7 +30,7 @@ class CategoriesController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'categories_name' => 'required'
+                'categories_name' => 'required|string'
             ]
         );
 
@@ -43,18 +42,17 @@ class CategoriesController extends Controller
             'categories_name' => $request->categories_name
         ]);
 
-        $data = $categories::where('categories_name', '=', $request->categories_name)->get();
         if ($store) {
             return Response()->json([
-                'status' => 1,
+                'status' => true,
                 'message' => 'Success create new data!',
-                'data' => $data
-            ]);
+                'data' => $store
+            ], 200);
         } else {
             return Response()->json([
-                'status' => 0,
+                'status' => false,
                 'message' => 'Failed create data!'
-            ]);
+            ], 404);
         }
     }
 
@@ -96,42 +94,41 @@ class CategoriesController extends Controller
             return Response()->json($validator->errors());
         }
 
-        $update = DB::table('categories')->where('categories_id', '=', $categories_id)->update([
+        $update = $categories::table('categories')->where('categories_id', '=', $categories_id)->update([
             'categories_name' => $request->categories_name
         ]);
 
-        $data = $categories::where('categories_id', '=', $categories_id)->get();
         if ($update) {
             return Response()->json([
-                'status' => 1,
+                'status' => true,
                 'message' => 'Success updating data!',
-                'data' => $data
-            ]);
+                'data' => $update
+            ], 200);
         } else {
             return Response()->json([
-                'status' => 0,
+                'status' => false,
                 'message' => 'Failed updating data!'
-            ]);
+            ], 404);
         }
     }
 
     /**
      * Delete data
      */
-    public function destroy($id)
+    public function destroy(Categories $categories, $categories_id)
     {
-        $delete = DB::table('categories')->where('categories_id', '=', $id)->delete();
+        $delete = $categories::table('categories')->where('categories_id', '=', $categories_id)->delete();
 
         if ($delete) {
             return Response()->json([
-                'status' => 1,
+                'status' => true,
                 'message' => 'Success delete data!'
-            ]);
+            ], 200);
         } else {
             return Response()->json([
-                'status' => 0,
+                'status' => false,
                 'message' => 'Failed delete data!'
-            ]);
+            ], 404);
         }
     }
 }

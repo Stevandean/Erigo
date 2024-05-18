@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('detail_transaction', function (Blueprint $table) {
-            $table->bigIncrements('detail_transaction_id');
+            $table->id();
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id');
             $table->string('quantity');
@@ -20,8 +20,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('transaction_id')->references('transaction_id')->on('transaction');
-            $table->foreign('product_id')->references('product_id')->on('product');
+            $table->foreign('transaction_id')->references('id')->on('transaction');
+            $table->foreign('product_id')->references('id')->on('product');
         });
     }
 
