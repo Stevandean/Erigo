@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('size');
             $table->integer('stock');
             $table->text('pict')->default(null);
-            $table->integer('rating');
             $table->unsignedBigInteger('categories_id');
             $table->timestamps();
             $table->softDeletes();
