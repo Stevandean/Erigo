@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { FaHome, FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 
 import {
@@ -6,10 +7,7 @@ import {
   TiktokIcon,
   TwitterIcon,
   YoutubeIcon,
-  AddressIcon,
-  ContactIcon,
 } from "../Common/CustomIcons";
-import { url } from "inspector";
 
 const Footer: FC = () => {
   const year = new Date().getFullYear();
@@ -54,12 +52,12 @@ const Footer: FC = () => {
 
   const contactLink = [
     {
-      icon: <AddressIcon />,
+      icon: <FaHome className="text-xl" />,
       value: `Jl. Niaga No.3, Ciptomulyo, Kec. Sukun, <br />
       Kota Malang, Jawa Timur 65148`,
     },
     {
-      icon: <ContactIcon />,
+      icon: <FaWhatsapp className="text-xl" />,
       value: "+62 811-9757-222",
     },
   ];
@@ -69,10 +67,12 @@ const Footer: FC = () => {
       <div className="container mx-auto xl:px-20">
         <div className="flex flex-wrap text-left lg:text-left">
           <div className="w-full lg:w-3/12 lg:px-4">
-            <h4 className="text-3xl lg:text-4xl font-extrabold uppercase">erigo</h4>
+            <h4 className="text-3xl lg:text-4xl font-extrabold uppercase">
+              erigo
+            </h4>
             <div className="mt-6 lg:mb-0 mb-6 flex space-x-2">
               {socialLink?.map((f, i) => (
-                <a
+                <Link
                   href={f.url}
                   target="_blank"
                   className="text-white hover:text-navy active:text-gray-600 transition duration-100"
@@ -80,7 +80,7 @@ const Footer: FC = () => {
                   key={i}
                 >
                   {f.icon}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -93,9 +93,9 @@ const Footer: FC = () => {
                 <ul className="list-unstyled">
                   {primaryLink?.map((f, i) => (
                     <li key={i}>
-                      <a className="block pb-2 text-sm" href={f.url}>
+                      <Link className="block pb-2 text-sm" href={f.url}>
                         {f.title}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -107,9 +107,9 @@ const Footer: FC = () => {
                 <ul className="list-unstyled">
                   {secondaryLink?.map((f, i) => (
                     <li key={i}>
-                      <a className="block pb-2 text-sm" href={f.url}>
+                      <Link className="block pb-2 text-sm" href={f.url}>
                         {f.title}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
