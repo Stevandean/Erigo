@@ -49,21 +49,29 @@ const ContainerAdminEditUser: FC = () => {
       phone: dataUpdate.phone,
       email: dataUpdate.email,
       password: dataUpdate.password,
+      role: dataUpdate.role,
     };
 
-    const img = dataUpdate.pict;
+    // const img = dataUpdate.pict;
 
     try {
-      const { status } = await axios.put(`users/${id}`, sendData);
-      if (status === 200 && dataUpdate.pict !== null) {
-        const { data } = await axios.post(`users/updateimage/${id}`, img);
-        successToast(data.message);
-        setIsLoading(false);
+      const { data } = await axios.put(`users/${id}`, sendData);
+      successToast(data.message);
+      setIsLoading(false);
 
-        setTimeout(() => {
-          router.push("/admin/user");
-        }, 1500);
-      }
+      setTimeout(() => {
+        router.push("/admin/user");
+      }, 1500);
+
+      // if (status === 200 && dataUpdate.pict !== null) {
+      //   const { data } = await axios.post(`users/updateimage/${id}`, img);
+      //   successToast(data.message);
+      //   setIsLoading(false);
+
+      //   setTimeout(() => {
+      //     router.push("/admin/user");
+      //   }, 1500);
+      // }
     } catch (err) {
       setIsLoading(false);
       if (isAxiosError(err)) {
