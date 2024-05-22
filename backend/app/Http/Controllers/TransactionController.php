@@ -6,13 +6,12 @@ use App\Models\Transaction;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
     /**
-     * Show all data
+     * Show all data.
      */
     public function index(Transaction $transaction)
     {
@@ -24,61 +23,61 @@ class TransactionController extends Controller
     }
 
     /**
-     * Create data
+     * Create data.
      */
     public function store(Request $request, Transaction $transaction)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'receipt_number' => 'required',
-                'payment_method' => 'required',
-                'status_payment' => 'required',
-                'status_courier' => 'required',
-                'users_id' => 'required'
-
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'payment_method' => 'required|string',
+            'status_payment' => 'required|string',
+            'status_courier' => 'required|string',
+            'users_id' => 'required|integer'
+        ]);
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
+        $receipt_number = $this->generateRandomString();
+
         $store = $transaction::create([
-            'receipt_number' => $request->receipt_number,
+            'receipt_number' => $receipt_number,
             'payment_method' => $request->payment_method,
             'status_payment' => $request->status_payment,
             'status_courier' => $request->status_courier,
             'users_id' => $request->users_id
         ]);
 
-        $data = $transaction::where('receipt_number', '=', $request->receipt_number)->get();
         if ($store) {
-            return Response()->json([
-                'status' => 1,
+            return response()->json([
+                'status' => true,
                 'message' => 'Success create new data!',
-                'data' => $data
-            ]);
+                'data' => $store
+            ], 200);
         } else {
-            return Response()->json([
-                'status' => 0,
+            return response()->json([
+                'status' => false,
                 'message' => 'Failed create data!'
-            ]);
+            ], 404);
         }
     }
 
     /**
-     * Show data by id
+     * Show data by id.
      */
-    public function show(Transaction $transaction, $transaction_id)
+    public function show($transaction_id)
     {
-        if ($transaction::where('transaction_id', $transaction_id)->exists()) {
-            $data = $transaction::where('transaction.transaction_id', '=', $transaction_id)->get();
+        if (Transaction::where('id', $transaction_id)->exists()) {
+            // fix the ambiguity by specifying the table name for the 'id' column
+            $show = Transaction::join('users', 'users.id', '=', 'transaction.users_id')
+                ->where('transaction.id', $transaction_id) // specify 'transaction.id' to avoid ambiguity
+                ->select('transaction.*', 'users.*') // select the columns you need
+                ->first();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
-                'data' => $data
+                'data' => $show
             ], 200);
         } else {
             return response()->json([
@@ -90,65 +89,75 @@ class TransactionController extends Controller
     }
 
     /**
-     * Update data
+     * Update data.
      */
     public function update(Request $request, Transaction $transaction, $transaction_id)
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'receipt_number' => 'required',
-                'payment_method' => 'required',
-                'status_payment' => 'required',
-                'status_courier' => 'required',
-                'users_id' => 'required'
+                'status_payment' => 'string',
+                'status_courier' => 'string'
             ]
         );
 
         if ($validator->fails()) {
-            return Response()->json($validator->errors());
+            return response()->json($validator->errors());
         }
 
-        $update = DB::table('transaction')->where('transaction_id', '=', $transaction_id)->update([
-            'receipt_number' => $request->receipt_number,
-            'payment_method' => $request->payment_method,
+        $update = $transaction::where('id', $transaction_id)->update([
             'status_payment' => $request->status_payment,
-            'status_courier' => $request->status_courier,
-            'users_id' => $request->users_id
+            'status_courier' => $request->status_courier
         ]);
 
-        $data = $transaction::where('transaction_id', '=', $transaction_id)->get();
         if ($update) {
-            return Response()->json([
-                'status' => 1,
+            return response()->json([
+                'status' => true,
                 'message' => 'Success updating data!',
-                'data' => $data
-            ]);
+                'data' => $update
+            ], 200);
         } else {
-            return Response()->json([
-                'status' => 0,
+            return response()->json([
+                'status' => false,
                 'message' => 'Failed updating data!'
-            ]);
+            ], 404);
         }
     }
 
     /**
-     * Delete data
+     * Delete data.
      */
-    public function destroy($id)
+    public function destroy(Transaction $transaction, $transaction_id)
     {
-        $delete = DB::table('transaction')->where('transaction_id', '=', $id)->delete();
+        $delete = $transaction::where('id', $transaction_id)->delete();
 
         if ($delete) {
-            return Response()->json([
-                'status' => 1,
+            return response()->json([
+                'status' => true,
                 'message' => 'Success delete data!'
-            ]);
+            ], 200);
         } else {
-            return Response()->json([
-                'status' => 0,
+            return response()->json([
+                'status' => false,
                 'message' => 'Failed delete data!'
-            ]);
+            ], 404);
         }
+    }
+
+    /**
+     * Generate random string for hashing request image filename.
+     */
+    protected function generateRandomString($length = 10)
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
+        }
+
+        return $randomString;
     }
 }
