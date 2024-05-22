@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaction', function (Blueprint $table) {
-            $table->bigIncrements('transaction_id');
+            $table->id();
             $table->string('receipt_number');
             $table->enum('payment_method', ['qris', 'bank_transfer']);
             $table->enum('status_payment', ['not_paid', 'paid'])->default('not_paid');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('users_id')->references('users_id')->on('users');
+            $table->foreign('users_id')->references('id')->on('users');
         });
     }
 
