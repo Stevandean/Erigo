@@ -61,13 +61,13 @@ class CategoriesController extends Controller
      */
     public function show(Categories $categories, $categories_id)
     {
-        if ($categories::where('categories_id', $categories_id)->exists()) {
-            $data = $categories::where('categories.categories_id', '=', $categories_id)->get();
+        if ($categories::where('id', $categories_id)->exists()) {
+            $show = $categories::where('categories.categories_id', '=', $categories_id)->first();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
-                'data' => $data
+                'data' => $show
             ], 200);
         } else {
             return response()->json([
@@ -94,7 +94,7 @@ class CategoriesController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $categories::table('categories')->where('categories_id', $categories_id)->update([
+        $update = $categories::where('id', $categories_id)->update([
             'categories_name' => $request->categories_name
         ]);
 
@@ -117,7 +117,7 @@ class CategoriesController extends Controller
      */
     public function destroy(Categories $categories, $categories_id)
     {
-        $delete = $categories::table('categories')->where('categories_id', $categories_id)->delete();
+        $delete = $categories::where('id', $categories_id)->delete();
 
         if ($delete) {
             return response()->json([

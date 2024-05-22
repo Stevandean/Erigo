@@ -94,7 +94,7 @@ class ProductController extends Controller
         $pict = null;
 
         if ($request->pict) {
-            $data = $product::where('product_id', $product_id)->first();
+            $data = $product::where('id', $product_id)->first();
 
             if ($data->pict) {
                 Storage::delete('public/pict/' . $data->pict);
@@ -107,11 +107,11 @@ class ProductController extends Controller
             Storage::putFileAs('public/pict', $request->pict, $pict);
         }
 
-        $update = $product::where('product_id', $product_id)->update([
+        $update = $product::where('id', $product_id)->update([
             'pict' => $pict
         ]);
 
-        $data = Product::where('product_id', '=', $product_id)->get();
+        $data = Product::where('id', $product_id)->get();
 
         if ($update) {
             return response()->json([
@@ -134,15 +134,15 @@ class ProductController extends Controller
     {
         if (Product::where('id', $product_id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
-            $data = Product::join('categories', 'categories.id', '=', 'product.categories_id')
+            $show = Product::join('categories', 'categories.id', '=', 'product.categories_id')
                 ->where('product.id', $product_id) // specify 'product.id' to avoid ambiguity
                 ->select('product.*', 'categories.*') // select the columns you need
-                ->get();
+                ->first();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
-                'data' => $data
+                'data' => $show
             ], 200);
         } else {
             return response()->json([
@@ -174,7 +174,7 @@ class ProductController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $product::table('product')->where('product_id', $product_id)->update([
+        $update = $product::where('id', $product_id)->update([
             'product_name' => $request->product_name,
             'price' => $request->price,
             'desc' => $request->desc,
@@ -202,13 +202,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product, $product_id)
     {
-        $data = $product::table('product')->where('product_id', $product_id)->delete();
+        $data = $product::where('id', $product_id)->delete();
 
         if ($data->pict) {
             Storage::delete('public/pict/' . $data->pict);
         }
 
-        $delete = $product::where('product_id', $product_id)->delete();
+        $delete = $product::where('id', $product_id)->delete();
 
         if ($delete) {
             return response()->json([

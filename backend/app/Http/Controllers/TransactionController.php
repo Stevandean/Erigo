@@ -69,15 +69,15 @@ class TransactionController extends Controller
     {
         if (Transaction::where('id', $transaction_id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
-            $data = Transaction::join('users', 'users.id', '=', 'transaction.users_id')
+            $show = Transaction::join('users', 'users.id', '=', 'transaction.users_id')
                 ->where('transaction.id', $transaction_id) // specify 'transaction.id' to avoid ambiguity
                 ->select('transaction.*', 'users.*') // select the columns you need
-                ->get();
+                ->first();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
-                'data' => $data
+                'data' => $show
             ], 200);
         } else {
             return response()->json([
@@ -105,7 +105,7 @@ class TransactionController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $transaction::table('transaction')->where('transaction_id', $transaction_id)->update([
+        $update = $transaction::where('id', $transaction_id)->update([
             'status_payment' => $request->status_payment,
             'status_courier' => $request->status_courier
         ]);
@@ -129,7 +129,7 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction, $transaction_id)
     {
-        $delete = $transaction::table('transaction')->where('transaction_id', $transaction_id)->delete();
+        $delete = $transaction::where('id', $transaction_id)->delete();
 
         if ($delete) {
             return response()->json([

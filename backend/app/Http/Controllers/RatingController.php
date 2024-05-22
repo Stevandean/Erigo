@@ -68,17 +68,17 @@ class RatingController extends Controller
     public function show($rating_id)
     {
         if (Rating::where('id', $rating_id)->exists()) {
-            $data = Rating::join('transaction', 'transaction.id', '=', 'rating.transaction_id')
+            $show = Rating::join('transaction', 'transaction.id', '=', 'rating.transaction_id')
                 ->join('product', 'product.id', '=', 'rating.product_id')
                 ->join('users', 'users.id', '=', 'rating.users_id')
                 ->where('rating.id', $rating_id) // specify 'rating.id' to avoid ambiguity
                 ->select('rating.*', 'transaction.*', 'product.*', 'users.*') // select the columns you need
-                ->get();
+                ->first();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
-                'data' => $data
+                'data' => $show
             ], 200);
         } else {
             return response()->json([
@@ -108,7 +108,7 @@ class RatingController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $rating::table('rating')->where('rating_id', $rating_id)->update([
+        $update = $rating::where('id', $rating_id)->update([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'users_id' => $request->users_id,
@@ -134,7 +134,7 @@ class RatingController extends Controller
      */
     public function destroy(Rating $rating, $rating_id)
     {
-        $delete = $rating::table('rating')->where('rating_id', $rating_id)->delete();
+        $delete = $rating::where('id', $rating_id)->delete();
 
         if ($delete) {
             return response()->json([

@@ -52,4 +52,5 @@ Route::prefix('v1')->group(function () {
     ]);
 
     Route::post('/product/updateimage/{id}', [ProductController::class, 'updateimage'])->name('product.updateimage');
+    Route::post('/users/updateimage/{id}', [UsersController::class, 'updateimage'])->name('users.updateimage');
 });
