@@ -3,6 +3,8 @@ import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
+import { AuthProvider } from "@/context/AuthContext";
+
 // const inter = Inter({ subsets: ['latin'] });
 const inter = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -40,18 +42,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {/* navbar */}
+      <link
+        rel="shortcut icon"
+        href="//erigostore.co.id/cdn/shop/files/New_Logo_Erigo_81faf464-002f-434b-bae0-632202133822_32x32.png?v=1692002740"
+        type="image/png"
+      />
+      <AuthProvider>
+        <body className={inter.className}>
+          {/* navbar */}
 
-        {/* toast container */}
-        <ToastContainer />
+          {/* toast container */}
+          <ToastContainer />
 
-        {/* scroll to top */}
+          {/* scroll to top */}
 
-        {children}
+          {children}
 
-        {/* footer */}
-      </body>
+          {/* footer */}
+        </body>
+      </AuthProvider>
     </html>
   );
 }

@@ -30,6 +30,8 @@ const UserSettings: FC = () => {
         <input
           className="border bg-white rounded-md h-[30px] px-5 border-navy"
           type="text"
+          maxLength={6}
+          size={6}
         />
       </div>
       <div className="flex flex-col w-5/6 xl:w-2/4 space-y-3">

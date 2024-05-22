@@ -2,7 +2,7 @@ import { FC } from "react";
 
 const UserInformation: FC = () => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-x-28 gap-y-7 xl:gap-y-4">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-x-28 space-y-7 xl:space-y-4">
       <div className="flex flex-col justify-center">
         <span className="font-medium">Name</span>
         <div className="flex border py-1.5 px-3 rounded-md space-x-3">

@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import { User } from "@/interfaces/user";
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
-import { errorToast, successToast } from "@/lib/toastNotify";
 import { useRouter } from "next/navigation";
+import { errorToast, successToast } from "@/lib/toastNotify";
 
 const ContainerRegister: FC = () => {
   const [data, setData] = useState<User>({
@@ -15,6 +15,7 @@ const ContainerRegister: FC = () => {
     phone: "",
     email: "",
     password: "",
+    role: "",
   });
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -30,7 +31,7 @@ const ContainerRegister: FC = () => {
       const sendData = { ...data };
 
       try {
-        const { data } = await axios.post("/auth/register", sendData);
+        const { data } = await axios.post("auth/register", sendData);
 
         successToast(data.message);
 

@@ -1,5 +1,6 @@
-import ProductCard from "@/components/Mixins/ProductCard";
 import { FC } from "react";
+
+import ProductCard from "@/components/Mixins/ProductCard";
 
 const FeaturedProduct: FC = () => {
   return (

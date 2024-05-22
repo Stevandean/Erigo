@@ -1,7 +1,44 @@
-import { FC } from "react";
+"use client";
+
+import { FC, FormEvent, useState } from "react";
 import Link from "next/link";
 
+import { Auth } from "@/interfaces/auth";
+import { isAxiosError, useAxios } from "@/hooks/useAxios";
+import { useRouter } from "next/navigation";
+import { errorToast, successToast } from "@/lib/toastNotify";
+
 const ContainerLogin: FC = () => {
+  const [data, setData] = useState<Auth>({
+    email: "",
+    password: "",
+  });
+
+  const axios = useAxios();
+  const router = useRouter();
+
+  const handleSUbmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const sendData = { ...data };
+
+    try {
+      const { data } = await axios.post("auth/login", sendData);
+      successToast(data.message);
+      localStorage.setItem("access_token", data.authorization.token);
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
+    } catch (err) {
+      if (isAxiosError(err)) {
+        errorToast(err.response?.data?.message || "An error occurred");
+      } else {
+        errorToast("An unexpected error occurred");
+      }
+    }
+  };
+
   return (
     <main className="bg-[#F9FAFB] min-h-screen flex items-center justify-center">
       <section className="bg-white max-w-lg mx-auto rounded-2xl p-[50px] w-5/6 xl:w-full">
@@ -15,7 +52,7 @@ const ContainerLogin: FC = () => {
           </h2>
         </div>
 
-        <form className="mt-[20px]">
+        <form className="mt-[20px]" onSubmit={handleSUbmit}>
           <div className="flex flex-col items-start mb-[20px]">
             <label htmlFor="email" className="font-medium text-sm mb-2">
               Email Address
@@ -25,6 +62,8 @@ const ContainerLogin: FC = () => {
               name="email"
               id="email"
               className="border border-black rounded-lg w-full h-[35px] px-3"
+              value={data.email}
+              onChange={(e) => setData({ ...data, email: e.target.value })}
             />
           </div>
 
@@ -45,6 +84,8 @@ const ContainerLogin: FC = () => {
               name="password"
               id="password"
               className="border border-black rounded-lg w-full h-[35px] px-3"
+              value={data.password}
+              onChange={(e) => setData({ ...data, password: e.target.value })}
             />
           </div>
 
