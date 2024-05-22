@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->bigIncrements('categories_id');
+            $table->id();
             $table->string('categories_name');
             $table->timestamps();
             $table->softDeletes();
