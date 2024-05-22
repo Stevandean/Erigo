@@ -98,10 +98,10 @@ class DetailTransactionController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'transaction_id' => 'required|integer',
-                'product_id' => 'required|integer',
-                'quantity' => 'required|string',
-                'total_price' => 'required|string'
+                'transaction_id' => 'integer',
+                'product_id' => 'integer',
+                'quantity' => 'string',
+                'total_price' => 'string'
             ]
         );
 

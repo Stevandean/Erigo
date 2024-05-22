@@ -103,11 +103,11 @@ class UsersController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|string',
-                'address' => 'required|string',
-                'phone' => 'required|string',
-                'email' => 'required|string|max:255',
-                'password' => 'required|string|min:8',
+                'name' => 'string',
+                'address' => 'string',
+                'phone' => 'string',
+                'email' => 'string|max:255',
+                'password' => 'string|min:8',
             ]
         );
 

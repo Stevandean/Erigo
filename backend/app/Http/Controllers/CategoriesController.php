@@ -86,7 +86,7 @@ class CategoriesController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'categories_name' => 'required|string'
+                'categories_name' => 'string'
             ]
         );
 

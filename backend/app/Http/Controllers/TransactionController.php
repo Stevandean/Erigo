@@ -96,8 +96,8 @@ class TransactionController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'status_payment' => 'required|string',
-                'status_courier' => 'required|string'
+                'status_payment' => 'string',
+                'status_courier' => 'string'
             ]
         );
 

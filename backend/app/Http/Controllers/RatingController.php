@@ -97,10 +97,10 @@ class RatingController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'transaction_id' => 'required|integer',
-                'product_id' => 'required|integer',
-                'users_id' => 'required|integer',
-                'rating' => 'required|string'
+                'transaction_id' => 'integer',
+                'product_id' => 'integer',
+                'users_id' => 'integer',
+                'rating' => 'string'
             ]
         );
 
