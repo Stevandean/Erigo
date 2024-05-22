@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
@@ -107,7 +108,7 @@ class UsersController extends Controller
                 'address' => 'string',
                 'phone' => 'string',
                 'email' => 'string|max:255',
-                'password' => 'string|min:8',
+                'role' => 'string'
             ]
         );
 
@@ -115,13 +116,32 @@ class UsersController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $users::where('id', $user_id)->update([
+        if ($request->has('password')) {
+            $passwordValidator = Validator::make(
+                $request->only('password'),
+                [
+                    'password' => 'string|min:8',
+                ]
+            );
+
+            if ($passwordValidator->fails()) {
+                return response()->json($passwordValidator->errors());
+            }
+        }
+
+        $dataToUpdate = [
             'name' => $request->name,
             'address' => $request->address,
             'phone' => $request->phone,
             'email' => $request->email,
-            'password' => $request->password
-        ]);
+            'role' => $request->role
+        ];
+
+        if ($request->has('password')) {
+            $dataToUpdate['password'] = Hash::make($request->password); // Hash the password
+        }
+
+        $update = $users::where('id', $user_id)->update($dataToUpdate);
 
         if ($update) {
             return response()->json([
@@ -136,6 +156,7 @@ class UsersController extends Controller
             ], 404);
         }
     }
+
 
     /**
      * Delete data.
