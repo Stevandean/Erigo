@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,12 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::prefix('v1')->group(function () {
+    Route::get('/hello', function () {
+        return response()->json([
+            'message' => 'helo'
+        ]);
+    });
+
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/register', [AuthController::class, 'register']);
@@ -35,17 +42,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 
-    Route::get('/hello', function () {
-        return response()->json([
-            'message' => 'helo'
-        ]);
-    });
-
     Route::apiResources([
         '/categories' => CategoriesController::class,
-        'detail_transaction' => DetailTransactionController::class,
+        '/detail-transaction' => DetailTransactionController::class,
         '/product' => ProductController::class,
-        'rating' => RatingController::class,
-        'transaction' => TransactionController::class,
+        '/rating' => RatingController::class,
+        '/transaction' => TransactionController::class,
+        '/users' => UsersController::class
     ]);
+
+    Route::post('/product/updateimage/{id}', [ProductController::class, 'updateimage'])->name('product.updateimage');
+    Route::post('/users/updateimage/{id}', [UsersController::class, 'updateimage'])->name('users.updateimage');
 });

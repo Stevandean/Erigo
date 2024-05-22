@@ -21,7 +21,7 @@ const Footer: FC = () => {
   const secondaryLink = [
     { title: "Erigo Tour", url: "/erigo-tour" },
     { title: "Exchanges & Returns", url: "/exchanges-returns" },
-    { title: "Payment Information", url: "/payment-information" },
+    { title: "Payment Information", url: "/faq" },
     { title: "How To Track Your Order", url: "/track-order" },
     { title: "How To Use Discount Code", url: "/use-discound" },
     { title: "FAQ", url: "/faq" },
