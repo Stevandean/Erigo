@@ -2,7 +2,7 @@ import { FC } from "react";
 
 const Cart: FC = () => {
   return (
-    <div className="border border-gray rounded-lg grid grid-cols-5 px-5 flex justify-center items-center gap-x-10">
+    <div className="border border-gray rounded-lg grid grid-cols-5 px-5 justify-center items-center gap-x-10">
       <img
         className="w-5/6 h-5/6 overflow-clip object-cover rounded-lg"
         src="./assets/img/Rectangle 4.png"
