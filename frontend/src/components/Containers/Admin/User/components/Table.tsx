@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Image from "next/image";
 import Link from "next/link";
 
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
@@ -21,16 +20,21 @@ import {
 
 type Props = {
   data: User[] | undefined;
+  getData: () => void;
   isLoading: boolean;
 };
 
-const TableUser: FC<Props> = ({ data, isLoading }) => {
+const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
   const axios = useAxios();
 
   const handleDelete = async (id: number) => {
     try {
-      const { data } = await axios.delete(`users/${id}`);
+      const { data, status } = await axios.delete(`users/${id}`);
       successToast(data.message);
+
+      if (status === 200) {
+        getData();
+      }
     } catch (err) {
       if (isAxiosError(err)) {
         errorToast(err.response?.data?.message || "An error occurred");
@@ -45,6 +49,11 @@ const TableUser: FC<Props> = ({ data, isLoading }) => {
       <table className="w-full mb-6">
         <thead className="rounded-sm bg-gray/10 dark:bg-blue-900">
           <tr>
+            <th className="p-2 text-center xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                No
+              </h5>
+            </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
                 Name
@@ -90,17 +99,21 @@ const TableUser: FC<Props> = ({ data, isLoading }) => {
                 key={i}
               >
                 <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
+                  {i + 1}
+                </td>
+
+                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
                   <div className="flex-shrink-0">
                     <img
                       src={
                         a?.pict
-                          ? a?.pict
+                          ? `http://192.168.1.9:8000/storage/user/${a?.pict}`
                           : `https://ui-avatars.com/api/?name=${a?.name}`
                       }
                       alt="Avatar"
-                      width={48}
-                      height={48}
-                      className="rounded-full"
+                      width={50}
+                      height={50}
+                      className="bg-center bg-cover rounded-full"
                     />
                   </div>
                   <p className="text-black">{a?.name}</p>
@@ -166,7 +179,7 @@ const TableUser: FC<Props> = ({ data, isLoading }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={6} className="p-2 xl:p-5 dark:bg-slate-100">
+              <td colSpan={7} className="p-2 xl:p-5 dark:bg-slate-100">
                 <p className="text-center text-black sm:block">
                   {isLoading ? "Loading..." : "No Data"}
                 </p>
