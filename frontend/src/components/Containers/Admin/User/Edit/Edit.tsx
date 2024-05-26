@@ -1,6 +1,13 @@
 "use client";
 
-import { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEventHandler,
+  FC,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
@@ -52,26 +59,31 @@ const ContainerAdminEditUser: FC = () => {
       role: dataUpdate.role,
     };
 
-    // const img = dataUpdate.pict;
-
     try {
-      const { data } = await axios.put(`users/${id}`, sendData);
-      successToast(data.message);
-      setIsLoading(false);
+      const { data, status } = await axios.put(`users/${id}`, sendData);
 
-      setTimeout(() => {
-        router.push("/admin/user");
-      }, 1500);
+      if (status === 200) {
+        if (dataUpdate.pict) {
+          const formData = new FormData();
+          formData.append("pict", dataUpdate.pict);
 
-      // if (status === 200 && dataUpdate.pict !== null) {
-      //   const { data } = await axios.post(`users/updateimage/${id}`, img);
-      //   successToast(data.message);
-      //   setIsLoading(false);
+          const { status } = await axios.post(
+            `users/updateimage/${id}`,
+            formData
+          );
 
-      //   setTimeout(() => {
-      //     router.push("/admin/user");
-      //   }, 1500);
-      // }
+          if (status === 200) {
+            setIsLoading(false);
+            successToast(data.message);
+
+            setTimeout(() => {
+              router.push("/admin/user");
+            }, 1500);
+          } else {
+            errorToast("Failed to update image");
+          }
+        }
+      }
     } catch (err) {
       setIsLoading(false);
       if (isAxiosError(err)) {
@@ -82,6 +94,17 @@ const ContainerAdminEditUser: FC = () => {
     }
   };
 
+  const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+
+      setDataUpdate({
+        ...dataUpdate,
+        pict: file,
+      });
+    }
+  };
+
   useEffect(() => {
     getDataUser();
   }, [getDataUser]);
@@ -89,8 +112,6 @@ const ContainerAdminEditUser: FC = () => {
   return (
     <AdminLayout>
       <Breadcrumb pageName="User" />
-
-      <pre>{JSON.stringify(dataUpdate, null, 2)}</pre>
 
       <div className="rounded-sm border bg-white">
         <div className="border-b px-6 py-4 dark:border-strokedark">
@@ -228,13 +249,7 @@ const ContainerAdminEditUser: FC = () => {
                 name="pict"
                 id="pict"
                 accept="image/*"
-                placeholder="Enter your email address"
-                onChange={(e) =>
-                  setDataUpdate({
-                    ...dataUpdate,
-                    pict: e.target.files && e.target.files[0],
-                  })
-                }
+                onChange={handleFileChange}
                 className="w-full file:mr-2 file:py-3 file:px-4 file:rounded-l file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-gray hover:file:bg-slate-200 text-gray bg-slate-100/30 rounded"
               />
             </div>
