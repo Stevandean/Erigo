@@ -111,7 +111,7 @@ class ProductController extends Controller
             'pict' => $pict
         ]);
 
-        $data = Product::where('id', $product_id)->get();
+        $data = Product::where('id', $product_id)->first();
 
         if ($update) {
             return response()->json([
