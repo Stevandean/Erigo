@@ -12,7 +12,7 @@ import Breadcrumb from "@/components/Common/Breadcrumb";
 
 const ContainerAdminEditUser: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<User>({
+  const [dataUpdate, setDataUpdate] = useState<User>({
     name: "",
     address: "",
     phone: "",
@@ -29,7 +29,7 @@ const ContainerAdminEditUser: FC = () => {
   const getDataUser = useCallback(async () => {
     try {
       const { data } = await axios.get(`users/${id}`);
-      setData(data.data);
+      setDataUpdate(data.data);
     } catch (err) {
       if (isAxiosError(err)) {
         errorToast(err.response?.data?.message || "An error occurred");
@@ -43,16 +43,35 @@ const ContainerAdminEditUser: FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const sendData = { ...data };
+    const sendData = {
+      name: dataUpdate.name,
+      address: dataUpdate.address,
+      phone: dataUpdate.phone,
+      email: dataUpdate.email,
+      password: dataUpdate.password,
+      role: dataUpdate.role,
+    };
+
+    // const img = dataUpdate.pict;
 
     try {
-      const { data } = await axios.post(`users/${id}`, sendData);
+      const { data } = await axios.put(`users/${id}`, sendData);
       successToast(data.message);
       setIsLoading(false);
 
       setTimeout(() => {
         router.push("/admin/user");
       }, 1500);
+
+      // if (status === 200 && dataUpdate.pict !== null) {
+      //   const { data } = await axios.post(`users/updateimage/${id}`, img);
+      //   successToast(data.message);
+      //   setIsLoading(false);
+
+      //   setTimeout(() => {
+      //     router.push("/admin/user");
+      //   }, 1500);
+      // }
     } catch (err) {
       setIsLoading(false);
       if (isAxiosError(err)) {
@@ -71,7 +90,7 @@ const ContainerAdminEditUser: FC = () => {
     <AdminLayout>
       <Breadcrumb pageName="User" />
 
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <pre>{JSON.stringify(dataUpdate, null, 2)}</pre>
 
       <div className="rounded-sm border bg-white">
         <div className="border-b px-6 py-4 dark:border-strokedark">
@@ -92,8 +111,10 @@ const ContainerAdminEditUser: FC = () => {
                   name="name"
                   id="name"
                   placeholder="Enter your full name"
-                  value={data.name}
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
+                  value={dataUpdate.name}
+                  onChange={(e) =>
+                    setDataUpdate({ ...dataUpdate, name: e.target.value })
+                  }
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40"
                 />
               </div>
@@ -110,8 +131,10 @@ const ContainerAdminEditUser: FC = () => {
                   name="phone"
                   id="phone"
                   placeholder="Enter your phone"
-                  value={data.phone}
-                  onChange={(e) => setData({ ...data, phone: e.target.value })}
+                  value={dataUpdate.phone}
+                  onChange={(e) =>
+                    setDataUpdate({ ...dataUpdate, phone: e.target.value })
+                  }
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40"
                 />
               </div>
@@ -129,8 +152,10 @@ const ContainerAdminEditUser: FC = () => {
                 name="address"
                 id="address"
                 placeholder="Enter your address"
-                value={data.address}
-                onChange={(e) => setData({ ...data, address: e.target.value })}
+                value={dataUpdate.address}
+                onChange={(e) =>
+                  setDataUpdate({ ...dataUpdate, address: e.target.value })
+                }
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40"
               ></textarea>
             </div>
@@ -140,12 +165,12 @@ const ContainerAdminEditUser: FC = () => {
 
               <div className="relative z-20 bg-transparent dark:bg-form-input">
                 <select
-                  value={data.role}
+                  value={dataUpdate.role}
                   onChange={(e) => {
-                    setData({ ...data, role: e.target.value });
+                    setDataUpdate({ ...dataUpdate, role: e.target.value });
                   }}
                   className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40 ${
-                    data.role ? "text-black" : ""
+                    dataUpdate.role ? "text-black" : ""
                   }`}
                 >
                   <option
@@ -204,8 +229,12 @@ const ContainerAdminEditUser: FC = () => {
                 id="pict"
                 accept="image/*"
                 placeholder="Enter your email address"
-                value={data.pict}
-                onChange={(e) => setData({ ...data, pict: e.target.value })}
+                onChange={(e) =>
+                  setDataUpdate({
+                    ...dataUpdate,
+                    pict: e.target.files && e.target.files[0],
+                  })
+                }
                 className="w-full file:mr-2 file:py-3 file:px-4 file:rounded-l file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-gray hover:file:bg-slate-200 text-gray bg-slate-100/30 rounded"
               />
             </div>
@@ -222,8 +251,10 @@ const ContainerAdminEditUser: FC = () => {
                 name="email"
                 id="email"
                 placeholder="Enter your email address"
-                value={data.email}
-                onChange={(e) => setData({ ...data, email: e.target.value })}
+                value={dataUpdate.email}
+                onChange={(e) =>
+                  setDataUpdate({ ...dataUpdate, email: e.target.value })
+                }
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40"
               />
             </div>
@@ -240,8 +271,10 @@ const ContainerAdminEditUser: FC = () => {
                 name="password"
                 id="password"
                 placeholder="***************"
-                value={data.password}
-                onChange={(e) => setData({ ...data, password: e.target.value })}
+                value={dataUpdate.password}
+                onChange={(e) =>
+                  setDataUpdate({ ...dataUpdate, password: e.target.value })
+                }
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-navy/40"
               />
             </div>
