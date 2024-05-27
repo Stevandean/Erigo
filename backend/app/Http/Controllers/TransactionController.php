@@ -65,12 +65,12 @@ class TransactionController extends Controller
     /**
      * Show data by id.
      */
-    public function show($transaction_id)
+    public function show($id)
     {
-        if (Transaction::where('id', $transaction_id)->exists()) {
+        if (Transaction::where('id', $id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
             $show = Transaction::join('users', 'users.id', '=', 'transaction.users_id')
-                ->where('transaction.id', $transaction_id) // specify 'transaction.id' to avoid ambiguity
+                ->where('transaction.id', $id) // specify 'transaction.id' to avoid ambiguity
                 ->select('transaction.*', 'users.*') // select the columns you need
                 ->first();
 
@@ -91,7 +91,7 @@ class TransactionController extends Controller
     /**
      * Update data.
      */
-    public function update(Request $request, Transaction $transaction, $transaction_id)
+    public function update(Request $request, Transaction $transaction, $id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -105,7 +105,7 @@ class TransactionController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $transaction::where('id', $transaction_id)->update([
+        $update = $transaction::where('id', $id)->update([
             'status_payment' => $request->status_payment,
             'status_courier' => $request->status_courier
         ]);
@@ -127,9 +127,9 @@ class TransactionController extends Controller
     /**
      * Delete data.
      */
-    public function destroy(Transaction $transaction, $transaction_id)
+    public function destroy(Transaction $transaction, $id)
     {
-        $delete = $transaction::where('id', $transaction_id)->delete();
+        $delete = $transaction::where('id', $id)->delete();
 
         if ($delete) {
             return response()->json([

@@ -28,10 +28,10 @@ class UsersController extends Controller
     /**
      * Show data by id.
      */
-    public function show(Users $users, $users_id)
+    public function show(Users $users, $id)
     {
-        if ($users::where('id', $users_id)->exists()) {
-            $show = $users::where('users.id', $users_id)->first();
+        if ($users::where('id', $id)->exists()) {
+            $show = $users::where('users.id', $id)->first();
 
             return response()->json([
                 'success' => true,
@@ -161,9 +161,9 @@ class UsersController extends Controller
     /**
      * Delete data.
      */
-    public function destroy(Users $users, $users_id)
+    public function destroy(Users $users, $id)
     {
-        $delete = $users::where('id', $users_id)->delete();
+        $delete = $users::where('id', $id)->delete();
 
         if ($delete) {
             return response()->json([

@@ -81,7 +81,7 @@ class ProductController extends Controller
     /**
      * Upload image if want update image.
      */
-    public function updateimage(Request $request, Product $product,  $product_id)
+    public function updateimage(Request $request, Product $product,  $id)
     {
         $validator = Validator::make($request->all(), [
             'pict' => 'required|image|mimes:jpeg,png,jpg',
@@ -94,7 +94,7 @@ class ProductController extends Controller
         $pict = null;
 
         if ($request->pict) {
-            $data = $product::where('id', $product_id)->first();
+            $data = $product::where('id', $id)->first();
 
             if ($data->pict) {
                 Storage::delete('public/pict/' . $data->pict);
@@ -107,11 +107,11 @@ class ProductController extends Controller
             Storage::putFileAs('public/pict', $request->pict, $pict);
         }
 
-        $update = $product::where('id', $product_id)->update([
+        $update = $product::where('id', $id)->update([
             'pict' => $pict
         ]);
 
-        $data = Product::where('id', $product_id)->first();
+        $data = Product::where('id', $id)->first();
 
         if ($update) {
             return response()->json([
@@ -130,12 +130,12 @@ class ProductController extends Controller
     /**
      * Show data by id.
      */
-    public function show($product_id)
+    public function show($id)
     {
-        if (Product::where('id', $product_id)->exists()) {
+        if (Product::where('id', $id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
             $show = Product::join('categories', 'categories.id', '=', 'product.categories_id')
-                ->where('product.id', $product_id) // specify 'product.id' to avoid ambiguity
+                ->where('product.id', $id) // specify 'product.id' to avoid ambiguity
                 ->select('product.*', 'categories.*') // select the columns you need
                 ->first();
 
@@ -156,7 +156,7 @@ class ProductController extends Controller
     /**
      * Update data.
      */
-    public function update(Request $request, Product $product, $product_id)
+    public function update(Request $request, Product $product, $id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -174,7 +174,7 @@ class ProductController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $product::where('id', $product_id)->update([
+        $update = $product::where('id', $id)->update([
             'product_name' => $request->product_name,
             'price' => $request->price,
             'desc' => $request->desc,
@@ -200,15 +200,15 @@ class ProductController extends Controller
     /**
      * Delete data.
      */
-    public function destroy(Product $product, $product_id)
+    public function destroy(Product $product, $id)
     {
-        $data = $product::where('id', $product_id)->delete();
+        $data = $product::where('id', $id)->delete();
 
         if ($data->pict) {
             Storage::delete('public/pict/' . $data->pict);
         }
 
-        $delete = $product::where('id', $product_id)->delete();
+        $delete = $product::where('id', $id)->delete();
 
         if ($delete) {
             return response()->json([
