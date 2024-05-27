@@ -50,7 +50,7 @@ class UsersController extends Controller
     /**
      * Upload image if want update image.
      */
-    public function updateimage(Request $request, Users $users,  $user_id)
+    public function updateimage(Request $request, Users $users, $user_id)
     {
         $validator = Validator::make($request->all(), [
             'pict' => 'required|image|mimes:jpeg,png,jpg',
@@ -80,7 +80,7 @@ class UsersController extends Controller
             'pict' => $pict
         ]);
 
-        $data = $users::where('id', $user_id)->first();
+        $data = Users::where('id', $user_id)->first();
 
         if ($update) {
             return response()->json([
@@ -176,5 +176,22 @@ class UsersController extends Controller
                 'message' => 'Failed delete data!'
             ], 404);
         }
+    }
+
+    /**
+     * Generate random string for hashing request image filename.
+     */
+    protected function generateRandomString($length = 30)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
+        }
+
+        return $randomString;
     }
 }

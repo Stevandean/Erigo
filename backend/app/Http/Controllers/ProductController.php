@@ -31,11 +31,11 @@ class ProductController extends Controller
             $request->all(),
             [
                 'product_name' => 'required|string',
-                'price' => 'required|integer',
+                'price' => 'required|string',
                 'desc' => 'required|string',
                 'size' => 'required|string',
                 'stock' => 'required|integer',
-                'pict' => 'required|image|mimes:jpeg,png,jpg',
+                'pict' => 'image|mimes:jpeg,png,jpg',
                 'categories_id' => 'required|integer',
             ]
         );
@@ -81,7 +81,7 @@ class ProductController extends Controller
     /**
      * Upload image if want update image.
      */
-    public function updateimage(Request $request, Product $product,  $product_id)
+    public function updateimage(Request $request, Product $product, $product_id)
     {
         $validator = Validator::make($request->all(), [
             'pict' => 'required|image|mimes:jpeg,png,jpg',
@@ -111,7 +111,7 @@ class ProductController extends Controller
             'pict' => $pict
         ]);
 
-        $data = Product::where('id', $product_id)->get();
+        $data = Product::where('id', $product_id)->first();
 
         if ($update) {
             return response()->json([
@@ -162,7 +162,7 @@ class ProductController extends Controller
             $request->all(),
             [
                 'product_name' => 'string',
-                'price' => 'integer',
+                'price' => 'string',
                 'desc' => 'string',
                 'size' => 'string',
                 'stock' => 'integer',

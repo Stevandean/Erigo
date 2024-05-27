@@ -62,7 +62,7 @@ class CategoriesController extends Controller
     public function show(Categories $categories, $categories_id)
     {
         if ($categories::where('id', $categories_id)->exists()) {
-            $show = $categories::where('categories.categories_id', '=', $categories_id)->first();
+            $show = $categories::where('categories.id', $categories_id)->first();
 
             return response()->json([
                 'success' => true,
