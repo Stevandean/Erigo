@@ -49,7 +49,7 @@ const ContainerAdminAddCategories: FC = () => {
 
       <div className="rounded-sm border bg-white">
         <div className="border-b px-6 py-4 dark:border-strokedark">
-          <h3 className="text-xl font-semibold text-black">Add New User</h3>
+          <h3 className="text-xl font-semibold text-black">Add New Categories</h3>
         </div>
 
         <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -59,13 +59,13 @@ const ContainerAdminAddCategories: FC = () => {
                 htmlFor="categoriesName"
                 className="mb-3 block text-sm font-medium text-black"
               >
-                Categories Name <span className="text-meta-1">*</span>
+                Categories Name
               </label>
               <input
                 type="text"
                 name="categoriesName"
                 id="categoriesName"
-                placeholder="Enter categories"
+                placeholder="Enter categories name"
                 value={data.categories_name}
                 onChange={(e) =>
                   setData({ ...data, categories_name: e.target.value })

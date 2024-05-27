@@ -1,4 +1,4 @@
-import ContainerAdminCategies from "@/components/Containers/Admin/categories/Categories";
+import ContainerAdminCategies from "@/components/Containers/Admin/Categories/Categories";
 import { FC } from "react";
 
 const page: FC = () => {

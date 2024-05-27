@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import ContainerAdminAddCategories from "@/components/Containers/Admin/categories/Add/Add";
+import ContainerAdminAddCategories from "@/components/Containers/Admin/Categories/Add/Add";
 
 const AdminAddCategories: FC = () => {
   return <ContainerAdminAddCategories />;
