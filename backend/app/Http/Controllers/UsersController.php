@@ -50,7 +50,7 @@ class UsersController extends Controller
     /**
      * Upload image if want update image.
      */
-    public function updateimage(Request $request, Users $users,  $user_id)
+    public function updateimage(Request $request, Users $users, $user_id)
     {
         $validator = Validator::make($request->all(), [
             'pict' => 'required|image|mimes:jpeg,png,jpg',
