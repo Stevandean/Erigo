@@ -144,14 +144,14 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $id = auth()->user()->id;
+        $users_id = auth()->user()->id;
 
-        $user = $usr::where('id', $id)->update(array_merge(
+        $user = $usr::where('id', $users_id)->update(array_merge(
             $validator->validated(),
             ['password' => Hash::make($request->password)]
         ));
 
-        $user_after_update = $usr::where('id', $id)->first();
+        $user_after_update = $usr::where('id', $users_id)->first();
 
         if ($user) {
             return response()->json([
@@ -177,9 +177,9 @@ class AuthController extends Controller
      */
     public function deletemyaccount(Users $usr)
     {
-        $id = auth()->user()->id;
+        $users_id = auth()->user()->id;
 
-        $delete = $usr::where('id', $id)->delete();
+        $delete = $usr::where('id', $users_id)->delete();
 
         if ($delete) {
             return response()->json([

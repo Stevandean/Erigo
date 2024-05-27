@@ -66,13 +66,13 @@ class DetailTransactionController extends Controller
     /**
      * Show data by id.
      */
-    public function show($id)
+    public function show($detail_transaction_id)
     {
-        if (DetailTransaction::where('id', $id)->exists()) {
+        if (DetailTransaction::where('id', $detail_transaction_id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
             $show = DetailTransaction::join('transaction', 'transaction.id', '=', 'detail_transaction.transaction_id')
                 ->join('product', 'product.id', '=', 'detail_transaction.product_id')
-                ->where('detail_transaction.id', $id) // specify 'detail_transaction_id.id' to avoid ambiguity
+                ->where('detail_transaction.id', $detail_transaction_id) // specify 'detail_transaction_id.id' to avoid ambiguity
                 ->select('detail_transaction.*', 'transaction.*', 'product.*') // select the columns you need
                 ->first();
 
@@ -93,7 +93,7 @@ class DetailTransactionController extends Controller
     /**
      * Update data.
      */
-    public function update(Request $request, DetailTransaction $detail_transaction, $id)
+    public function update(Request $request, DetailTransaction $detail_transaction, $detail_transaction_id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -109,7 +109,7 @@ class DetailTransactionController extends Controller
             return response()->json($validator->errors());
         }
 
-        $update = $detail_transaction::where('id', $id)->update([
+        $update = $detail_transaction::where('id', $detail_transaction_id)->update([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
@@ -133,9 +133,9 @@ class DetailTransactionController extends Controller
     /**
      * Delete data.
      */
-    public function destroy(DetailTransaction $detail_transaction, $id)
+    public function destroy(DetailTransaction $detail_transaction, $detail_transaction_id)
     {
-        $delete = $detail_transaction::where('id', $id)->delete();
+        $delete = $detail_transaction::where('id', $detail_transaction_id)->delete();
 
         if ($delete) {
             return response()->json([
