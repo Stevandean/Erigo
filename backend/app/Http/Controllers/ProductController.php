@@ -156,7 +156,7 @@ class ProductController extends Controller
     /**
      * Update data.
      */
-    public function update(Request $request, Product $product, $product_id)
+    public function update(Request $request, int $product_id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -173,15 +173,16 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
-
-        $update = $product::where('id', $product_id)->update([
+        $dataToUpdate = [
             'product_name' => $request->product_name,
             'price' => $request->price,
             'desc' => $request->desc,
             'size' => $request->size,
             'stock' => $request->stock,
-            'categories_id' => $request->categories_id,
-        ]);
+            'categories_id' => $request->categories_id
+        ];
+
+        $update = Product::where('id', $product_id)->update($dataToUpdate);
 
         if ($update) {
             return response()->json([
@@ -232,8 +233,9 @@ class ProductController extends Controller
         $charactersLength = strlen($characters);
         $randomString = '';
 
-        for ($i = false; $i < $length; $i++) {
-            $randomString .= $characters[rand(false,  $charactersLength - true)];
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
         }
 
         return $randomString;
