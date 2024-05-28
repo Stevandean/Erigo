@@ -1,9 +1,10 @@
 export interface Product {
+  id?: number;
   product_name: string;
-  price: number;
+  price: string;
   desc: string;
   size: string;
-  stock: number;
-  pict: string;
-  categories_id: number;
+  stock: string;
+  pict?: string | any;
+  categories_id: string;
 }

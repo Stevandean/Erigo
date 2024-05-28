@@ -15,7 +15,7 @@ const Breadcrumb: FC<BreadcrumbProps> = ({ pageName }) => {
       <nav>
         <ol className="flex items-center gap-2">
           <li>
-            <Link className="font-medium" href="/">
+            <Link className="font-medium" href="/admin">
               Dashboard /
             </Link>
           </li>

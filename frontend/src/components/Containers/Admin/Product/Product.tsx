@@ -3,16 +3,16 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
-import { User } from "@/interfaces/user";
+import { Product } from "@/interfaces/product";
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
 import { errorToast } from "@/lib/toastNotify";
 import AdminLayout from "@/layouts/AdminLayout";
 import Breadcrumb from "@/components/Common/Breadcrumb";
-import TableUser from "./components/Table";
+import TableProduct from "./components/Table";
 
-const ContainerAdminUser: FC = () => {
+const ContainerAdminProduct: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<User[]>();
+  const [data, setData] = useState<Product[]>();
 
   const axios = useAxios();
 
@@ -20,7 +20,7 @@ const ContainerAdminUser: FC = () => {
     setIsLoading(true);
 
     try {
-      const { data } = await axios.get("users");
+      const { data } = await axios.get("product");
       setIsLoading(false);
       setData(data.data);
     } catch (err) {
@@ -38,19 +38,19 @@ const ContainerAdminUser: FC = () => {
 
   return (
     <AdminLayout>
-      <Breadcrumb pageName="User" />
+      <Breadcrumb pageName="Product" />
 
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <h4 className="mb-6 text-xl font-semibold text-black">All Users</h4>
+        <h1 className="mb-6 text-xl font-semibold text-black">All Product</h1>
 
-        <TableUser data={data} getData={getData} isLoading={isLoading} />
+        <TableProduct data={data} getData={getData} isLoading={isLoading} />
 
         <div className="flex items-end justify-end mb-6">
           <Link
-            href="/admin/user/add"
+            href="/admin/product/add"
             className="bg-navy dark:bg-blue-900 hover:bg-navy/90 dark:hover:bg-blue-900/90 text-white px-3 py-2 rounded-lg transition-all duration-200 ease-linear"
           >
-            Add new user
+            Add new product
           </Link>
         </div>
       </div>
@@ -58,4 +58,4 @@ const ContainerAdminUser: FC = () => {
   );
 };
 
-export default ContainerAdminUser;
+export default ContainerAdminProduct;

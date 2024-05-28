@@ -3,9 +3,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
-import { User } from "@/interfaces/user";
+import { Categories } from "@/interfaces/categories";
 import { errorToast, successToast } from "@/lib/toastNotify";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,17 +18,17 @@ import {
 } from "@/components/ui/alert-dialog";
 
 type Props = {
-  data: User[] | undefined;
+  data: Categories[] | undefined;
   getData: () => void;
   isLoading: boolean;
 };
 
-const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
+const TableCategories: FC<Props> = ({ data, getData, isLoading }) => {
   const axios = useAxios();
 
   const handleDelete = async (id: number) => {
     try {
-      const { data, status } = await axios.delete(`users/${id}`);
+      const { data, status } = await axios.delete(`categories/${id}`);
       successToast(data.message);
 
       if (status === 200) {
@@ -54,29 +53,9 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                 No
               </h5>
             </th>
-            <th className="p-2 text-center xl:p-5">
+            <th className="p-2 text-center xl:p-5 w-[80%]">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Name
-              </h5>
-            </th>
-            <th className="p-2 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Address
-              </h5>
-            </th>
-            <th className="p-2 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Phone
-              </h5>
-            </th>
-            <th className="p-2 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Email
-              </h5>
-            </th>
-            <th className="p-2 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Role
+                Categories Name
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
@@ -98,51 +77,14 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                 }`}
                 key={i}
               >
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  {i + 1}
-                </td>
-
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={
-                        a?.pict
-                          ? `http://192.168.1.9:8000/storage/user/${a?.pict}`
-                          : `https://ui-avatars.com/api/?name=${a?.name}`
-                      }
-                      alt="Avatar"
-                      width={50}
-                      height={50}
-                      className="bg-center bg-cover rounded-full"
-                    />
-                  </div>
-                  <p className="text-black">{a?.name}</p>
-                </td>
-
+                <td className="p-2 xl:p-5">{i + 1}</td>
                 <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.address}</p>
+                  <p className="text-center text-black">{a?.categories_name}</p>
                 </td>
-
-                <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.phone}</p>
-                </td>
-
-                <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.email}</p>
-                </td>
-
-                <td className="p-2 xl:p-5">
-                  <div className="flex items-center justify-center">
-                    <Badge className="capitalize bg-blue-500 hover:bg-blue-500 dark:text-white">
-                      {a?.role}
-                    </Badge>
-                  </div>
-                </td>
-
                 <td className="p-2 xl:p-5">
                   <div className="flex items-center justify-center gap-3">
                     <Link
-                      href={`/admin/user/${a?.id}`}
+                      href={`/admin/categories/${a?.id}`}
                       className="flex items-center justify-center bg-yellow px-3 py-2 rounded-lg w-auto"
                     >
                       <FaEdit className="text-white" />
@@ -179,7 +121,7 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="p-2 xl:p-5 dark:bg-slate-100">
+              <td colSpan={3} className="p-2 xl:p-5 dark:bg-slate-100">
                 <p className="text-center text-black sm:block">
                   {isLoading ? "Loading..." : "No Data"}
                 </p>
@@ -192,4 +134,4 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
   );
 };
 
-export default TableUser;
+export default TableCategories;

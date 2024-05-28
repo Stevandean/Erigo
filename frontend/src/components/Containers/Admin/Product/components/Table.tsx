@@ -3,7 +3,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
-import { User } from "@/interfaces/user";
+import { Product } from "@/interfaces/product";
 import { errorToast, successToast } from "@/lib/toastNotify";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/alert-dialog";
 
 type Props = {
-  data: User[] | undefined;
+  data: Product[] | undefined;
   getData: () => void;
   isLoading: boolean;
 };
 
-const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
+const TableProduct: FC<Props> = ({ data, getData, isLoading }) => {
   const axios = useAxios();
 
   const handleDelete = async (id: number) => {
@@ -56,27 +56,27 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
             </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Name
+                Product Name
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Address
+                Price
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Phone
+                Description
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Email
+                Size
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Role
+                Stock
               </h5>
             </th>
             <th className="p-2 text-center xl:p-5">
@@ -108,7 +108,7 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                       src={
                         a?.pict
                           ? `http://192.168.1.9:8000/storage/user/${a?.pict}`
-                          : `https://ui-avatars.com/api/?name=${a?.name}`
+                          : `https://ui-avatars.com/api/?name=${a?.product_name}`
                       }
                       alt="Avatar"
                       width={50}
@@ -116,33 +116,29 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                       className="bg-center bg-cover rounded-full"
                     />
                   </div>
-                  <p className="text-black">{a?.name}</p>
+                  <p className="text-black">{a?.product_name}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.address}</p>
+                  <p className="text-center text-black">{a?.price}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.phone}</p>
+                  <p className="text-center text-black">{a?.desc}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">
-                  <p className="text-center text-black">{a?.email}</p>
+                  <p className="text-center text-black">{a?.size}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">
-                  <div className="flex items-center justify-center">
-                    <Badge className="capitalize bg-blue-500 hover:bg-blue-500 dark:text-white">
-                      {a?.role}
-                    </Badge>
-                  </div>
+                  <p className="text-center text-black">{a?.stock}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">
                   <div className="flex items-center justify-center gap-3">
                     <Link
-                      href={`/admin/user/${a?.id}`}
+                      href={`/admin/product/${a?.id}`}
                       className="flex items-center justify-center bg-yellow px-3 py-2 rounded-lg w-auto"
                     >
                       <FaEdit className="text-white" />
@@ -192,4 +188,4 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
   );
 };
 
-export default TableUser;
+export default TableProduct;
