@@ -15,6 +15,7 @@ class DetailTransactionController extends Controller
      */
     public function index(DetailTransaction $detail_transaction)
     {
+        // Retrieves all detail transactions from the database and returns them in a JSON response.
         return response()->json([
             'success' => true,
             'message' => 'Success show all data!',
@@ -27,6 +28,7 @@ class DetailTransactionController extends Controller
      */
     public function store(Request $request, DetailTransaction $detail_transaction)
     {
+        // Validates the incoming request data.
         $validator = Validator::make(
             $request->all(),
             [
@@ -37,18 +39,20 @@ class DetailTransactionController extends Controller
             ]
         );
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
+        // Creates a new detail transaction with the provided data.
         $store = $detail_transaction::create([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
             'total_price' => $request->total_price
-
         ]);
 
+        // Returns a success message and the created detail transaction data if creation was successful, otherwise an error message.
         if ($store) {
             return response()->json([
                 'status' => true,
@@ -59,7 +63,7 @@ class DetailTransactionController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed create data!'
-            ], 404);
+            ], 500);
         }
     }
 
@@ -68,33 +72,37 @@ class DetailTransactionController extends Controller
      */
     public function show($detail_transaction_id)
     {
+        // Checks if a detail transaction with the specified ID exists.
         if (DetailTransaction::where('id', $detail_transaction_id)->exists()) {
-            // fix the ambiguity by specifying the table name for the 'id' column
+            // Retrieves the detail transaction data along with related transaction and product information.
             $show = DetailTransaction::join('transaction', 'transaction.id', '=', 'detail_transaction.transaction_id')
                 ->join('product', 'product.id', '=', 'detail_transaction.product_id')
-                ->where('detail_transaction.id', $detail_transaction_id) // specify 'detail_transaction_id.id' to avoid ambiguity
-                ->select('detail_transaction.*', 'transaction.*', 'product.*') // select the columns you need
+                ->where('detail_transaction.id', $detail_transaction_id)
+                ->select('detail_transaction.*', 'transaction.*', 'product.*')
                 ->first();
 
+            // Returns the detail transaction data in a JSON response.
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
                 'data' => $show
             ], 200);
         } else {
+            // Returns an error message if the detail transaction is not found.
             return response()->json([
                 'success' => false,
                 'message' => 'Failed find the data!',
                 'data' => ''
-            ], 404);
+            ], 500);
         }
     }
 
     /**
      * Update data.
      */
-    public function update(Request $request, DetailTransaction $detail_transaction, $detail_transaction_id)
+    public function update(Request $request, int $detail_transaction_id)
     {
+        // Validates the incoming request data.
         $validator = Validator::make(
             $request->all(),
             [
@@ -105,17 +113,20 @@ class DetailTransactionController extends Controller
             ]
         );
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
-        $update = $detail_transaction::where('id', $detail_transaction_id)->update([
+        // Updates the detail transaction with the specified ID using the provided data.
+        $update = DetailTransaction::where('id', $detail_transaction_id)->update([
             'transaction_id' => $request->transaction_id,
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
             'total_price' => $request->total_price
         ]);
 
+        // Returns a success message and the number of affected rows if the update was successful, otherwise an error message.
         if ($update) {
             return response()->json([
                 'status' => true,
@@ -126,27 +137,29 @@ class DetailTransactionController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
-            ], 404);
+            ], 500);
         }
     }
 
     /**
      * Delete data.
      */
-    public function destroy(DetailTransaction $detail_transaction, $detail_transaction_id)
+    public function destroy(int $detail_transaction_id)
     {
-        $delete = $detail_transaction::where('id', $detail_transaction_id)->delete();
+        // Deletes the detail transaction with the specified ID from the database.
+        $delete = DetailTransaction::where('id', $detail_transaction_id)->delete();
 
+        // Returns a success message if the deletion was successful, otherwise an error message.
         if ($delete) {
             return response()->json([
                 'status' => true,
                 'message' => 'Success delete data!'
-            ], 288);
+            ], 200);
         } else {
             return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
-            ], 404);
+            ], 500);
         }
     }
 }

@@ -15,6 +15,7 @@ class TransactionController extends Controller
      */
     public function index(Transaction $transaction)
     {
+        // Retrieves all products from the database and returns them in a JSON response.
         return response()->json([
             'success' => true,
             'message' => 'Success show all data!',
@@ -27,6 +28,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request, Transaction $transaction)
     {
+        // Validates the incoming request data.
         $validator = Validator::make($request->all(), [
             'payment_method' => 'required|string',
             'status_payment' => 'required|string',
@@ -34,12 +36,15 @@ class TransactionController extends Controller
             'users_id' => 'required|integer'
         ]);
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
+        // Processes the receipt number transaction
         $receipt_number = $this->generateRandomString();
 
+        // Creates a new transaction record based on the provided request data.
         $store = $transaction::create([
             'receipt_number' => $receipt_number,
             'payment_method' => $request->payment_method,
@@ -48,6 +53,7 @@ class TransactionController extends Controller
             'users_id' => $request->users_id
         ]);
 
+        // Returns a success message and the created transaction data if creation was successful, otherwise an error message.
         if ($store) {
             return response()->json([
                 'status' => true,
@@ -58,7 +64,7 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed create data!'
-            ], 404);
+            ], 500);
         }
     }
 
@@ -67,6 +73,7 @@ class TransactionController extends Controller
      */
     public function show($transaction_id)
     {
+        // Checks if a product with the specified ID exists.
         if (Transaction::where('id', $transaction_id)->exists()) {
             // fix the ambiguity by specifying the table name for the 'id' column
             $show = Transaction::join('users', 'users.id', '=', 'transaction.users_id')
@@ -74,25 +81,28 @@ class TransactionController extends Controller
                 ->select('transaction.*', 'users.*') // select the columns you need
                 ->first();
 
+            // Returns the transaction data in a JSON response.
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
                 'data' => $show
             ], 200);
         } else {
+            // Returns an error message if the transaction is not found.
             return response()->json([
                 'success' => false,
                 'message' => 'Failed find the data!',
                 'data' => ''
-            ], 404);
+            ], 500);
         }
     }
 
     /**
      * Update data.
      */
-    public function update(Request $request, Transaction $transaction, $transaction_id)
+    public function update(Request $request, int $transaction_id)
     {
+        // Validates the incoming request data.
         $validator = Validator::make(
             $request->all(),
             [
@@ -101,15 +111,18 @@ class TransactionController extends Controller
             ]
         );
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
-        $update = $transaction::where('id', $transaction_id)->update([
+        // Constructs the data to be updated based on the provided request data.
+        $update = Transaction::where('id', $transaction_id)->update([
             'status_payment' => $request->status_payment,
             'status_courier' => $request->status_courier
         ]);
 
+        // Returns a success message and the number of affected rows if the update was successful, otherwise an error message.
         if ($update) {
             return response()->json([
                 'status' => true,
@@ -120,17 +133,19 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
-            ], 404);
+            ], 500);
         }
     }
 
     /**
      * Delete data.
      */
-    public function destroy(Transaction $transaction, $transaction_id)
+    public function destroy(int $transaction_id)
     {
-        $delete = $transaction::where('id', $transaction_id)->delete();
+        // Deletes the transaction record with the specified ID.
+        $delete = Transaction::where('id', $transaction_id)->delete();
 
+        // Returns a success message if deletion was successful, otherwise an error message.
         if ($delete) {
             return response()->json([
                 'status' => true,
@@ -140,7 +155,7 @@ class TransactionController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
-            ], 404);
+            ], 500);
         }
     }
 
@@ -149,6 +164,7 @@ class TransactionController extends Controller
      */
     protected function generateRandomString($length = 10)
     {
+        // Generates a random string with the specified length using alphanumeric characters.
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';

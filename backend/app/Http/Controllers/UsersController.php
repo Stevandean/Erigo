@@ -18,6 +18,7 @@ class UsersController extends Controller
      */
     public function index(Users $users)
     {
+        // Retrieves all users and returns them as a JSON response.
         return response()->json([
             'success' => true,
             'message' => 'Success show all data!',
@@ -30,32 +31,38 @@ class UsersController extends Controller
      */
     public function show(Users $users, $users_id)
     {
+        // Checks if the user with the specified ID exists.
         if ($users::where('id', $users_id)->exists()) {
+            // Retrieves the user data with the specified ID.
             $show = $users::where('users.id', $users_id)->first();
 
+            // Returns the retrieved data as a JSON response.
             return response()->json([
                 'success' => true,
                 'message' => 'Success show data!',
                 'data' => $show
             ], 200);
         } else {
+            // Returns an error message if the user is not found.
             return response()->json([
                 'success' => false,
                 'message' => 'Failed find the data!',
                 'data' => ''
-            ], 404);
+            ], 500);
         }
     }
 
     /**
-     * Upload image if want update image.
+     * Upload image if want to update image.
      */
     public function updateimage(Request $request, Users $users, $user_id)
     {
+        // Validates the incoming request data.
         $validator = Validator::make($request->all(), [
             'pict' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
@@ -66,9 +73,11 @@ class UsersController extends Controller
             $data = $users::where('id', $user_id)->first();
 
             if ($data->pict) {
+                // Delete the existing picture if it exists.
                 Storage::delete('public/user/' . $data->pict);
             }
 
+            // Generate a random filename and store the uploaded image.
             $fileName = $this->generateRandomString();
             $extention = $request->pict->getClientOriginalExtension();
             $pict = $fileName . '.' . $extention;
@@ -76,12 +85,15 @@ class UsersController extends Controller
             Storage::putFileAs('public/user', $request->pict, $pict);
         }
 
+        // Update the user's profile picture in the database.
         $update = $users::where('id', $user_id)->update([
             'pict' => $pict
         ]);
 
+        // Retrieves the updated user data.
         $data = Users::where('id', $user_id)->first();
 
+        // Returns a success message and the updated data if successful, otherwise an error message.
         if ($update) {
             return response()->json([
                 'status' => true,
@@ -92,15 +104,16 @@ class UsersController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed upload picture!'
-            ], 404);
+            ], 500);
         }
     }
 
     /**
      * Update data.
      */
-    public function update(Request $request, Users $users, $user_id)
+    public function update(Request $request, int $user_id)
     {
+        // Validates the incoming request data.
         $validator = Validator::make(
             $request->all(),
             [
@@ -112,10 +125,12 @@ class UsersController extends Controller
             ]
         );
 
+        // If validation fails, returns the validation errors as a JSON response.
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
+        // Validates the password field separately if present.
         if ($request->has('password')) {
             $passwordValidator = Validator::make(
                 $request->only('password'),
@@ -129,6 +144,7 @@ class UsersController extends Controller
             }
         }
 
+        // Constructs the data to be updated based on the request data.
         $dataToUpdate = [
             'name' => $request->name,
             'address' => $request->address,
@@ -137,12 +153,15 @@ class UsersController extends Controller
             'role' => $request->role
         ];
 
+        // Hashes the password if included in the request.
         if ($request->has('password')) {
             $dataToUpdate['password'] = Hash::make($request->password); // Hash the password
         }
 
-        $update = $users::where('id', $user_id)->update($dataToUpdate);
+        // Updates the user data in the database.
+        $update = Users::where('id', $user_id)->update($dataToUpdate);
 
+        // Returns a success message and the number of affected rows if successful, otherwise an error message.
         if ($update) {
             return response()->json([
                 'status' => true,
@@ -153,18 +172,19 @@ class UsersController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed updating data!'
-            ], 404);
+            ], 500);
         }
     }
-
 
     /**
      * Delete data.
      */
-    public function destroy(Users $users, $users_id)
+    public function destroy(int $users_id)
     {
-        $delete = $users::where('id', $users_id)->delete();
+        // Deletes the user data with the specified ID.
+        $delete = Users::where('id', $users_id)->delete();
 
+        // Returns a success message if deletion was successful, otherwise an error message.
         if ($delete) {
             return response()->json([
                 'status' => true,
@@ -174,7 +194,7 @@ class UsersController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed delete data!'
-            ], 404);
+            ], 500);
         }
     }
 
@@ -183,6 +203,7 @@ class UsersController extends Controller
      */
     protected function generateRandomString($length = 30)
     {
+        // Generates a random string with the specified length using alphanumeric characters.
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
