@@ -5,7 +5,6 @@ import Link from "next/link";
 import { isAxiosError, useAxios } from "@/hooks/useAxios";
 import { Product } from "@/interfaces/product";
 import { errorToast, successToast } from "@/lib/toastNotify";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +28,7 @@ const TableProduct: FC<Props> = ({ data, getData, isLoading }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      const { data, status } = await axios.delete(`users/${id}`);
+      const { data, status } = await axios.delete(`product/${id}`);
       successToast(data.message);
 
       if (status === 200) {
@@ -98,25 +97,27 @@ const TableProduct: FC<Props> = ({ data, getData, isLoading }) => {
                 }`}
                 key={i}
               >
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  {i + 1}
+                <td className="p-2 xl:p-5">
+                  <span className="flex justify-center">{i + 1}</span>
                 </td>
 
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={
-                        a?.pict
-                          ? `http://192.168.1.9:8000/storage/user/${a?.pict}`
-                          : `https://ui-avatars.com/api/?name=${a?.product_name}`
-                      }
-                      alt="Avatar"
-                      width={50}
-                      height={50}
-                      className="bg-center bg-cover rounded-full"
-                    />
+                <td className="p-2 xl:p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-shrink-0">
+                      <img
+                        src={
+                          a?.pict
+                            ? `http://192.168.1.4:8000/storage/pict/${a?.pict}`
+                            : `https://ui-avatars.com/api/?name=${a?.product_name}`
+                        }
+                        alt="Avatar"
+                        width={50}
+                        height={50}
+                        className="bg-center bg-cover rounded-lg"
+                      />
+                    </div>
+                    <p className="text-black">{a?.product_name}</p>
                   </div>
-                  <p className="text-black">{a?.product_name}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">

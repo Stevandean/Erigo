@@ -8,7 +8,7 @@ import { isAxiosError, useAxios } from "@/hooks/useAxios";
 import { errorToast } from "@/lib/toastNotify";
 import AdminLayout from "@/layouts/AdminLayout";
 import Breadcrumb from "@/components/Common/Breadcrumb";
-import TableCategories from "./components/table";
+import TableCategories from "./components/Table";
 
 const ContainerAdminCategies: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

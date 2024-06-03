@@ -66,12 +66,14 @@ const ContainerAdminAddProduct: FC = () => {
       successToast(data.message);
       setIsLoading(false);
 
-      // setTimeout(() => {
-      //   router.push("/admin/product");
-      // }, 1500);
+      setTimeout(() => {
+        router.push("/admin/product");
+      }, 1500);
     } catch (err) {
       setIsLoading(false);
       if (isAxiosError(err)) {
+        console.log('Failed insert data');
+        
         errorToast(err.response?.data?.message || "An error occurred");
       } else {
         errorToast("An unexpected error occurred");
@@ -82,7 +84,7 @@ const ContainerAdminAddProduct: FC = () => {
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files) {
       const file = e.target.files[0];
-      console.log(file);
+      console.log('foto');
 
       setData({
         ...data,

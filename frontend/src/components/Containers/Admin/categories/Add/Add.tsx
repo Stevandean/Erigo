@@ -26,13 +26,12 @@ const ContainerAdminAddCategories: FC = () => {
     const sendData = { ...data };
 
     try {
-      const { data } = await axios.post("categories", sendData);
+      const { data } = await axios.post("categories",sendData);
       successToast(data.message);
       setIsLoading(false);
-
       setTimeout(() => {
         router.push("/admin/categories");
-      });
+      }, 1500);
     } catch (err) {
       setIsLoading(true);
       if (isAxiosError(err)) {

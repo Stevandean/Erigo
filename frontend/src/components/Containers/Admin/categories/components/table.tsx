@@ -42,7 +42,6 @@ const TableCategories: FC<Props> = ({ data, getData, isLoading }) => {
       }
     }
   };
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full mb-6">

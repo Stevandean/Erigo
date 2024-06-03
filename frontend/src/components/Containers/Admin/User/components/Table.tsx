@@ -98,25 +98,25 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                 }`}
                 key={i}
               >
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  {i + 1}
-                </td>
+                <td className="p-2 xl:p-5">{i + 1}</td>
 
-                <td className="flex items-center justify-center gap-3 p-2 xl:p-5">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={
-                        a?.pict
-                          ? `http://192.168.1.9:8000/storage/user/${a?.pict}`
-                          : `https://ui-avatars.com/api/?name=${a?.name}`
-                      }
-                      alt="Avatar"
-                      width={50}
-                      height={50}
-                      className="bg-center bg-cover rounded-full"
-                    />
+                <td className="p-2 xl:p-5">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex-shrink-0">
+                      <img
+                        src={
+                          a?.pict
+                            ? `http://192.168.1.4:8000/storage/user/${a?.pict}`
+                            : `https://ui-avatars.com/api/?name=${a?.name}`
+                        }
+                        alt="Avatar"
+                        width={50}
+                        height={50}
+                        className="bg-center bg-cover rounded-full"
+                      />
+                    </div>
+                    <p className="text-black">{a?.name}</p>
                   </div>
-                  <p className="text-black">{a?.name}</p>
                 </td>
 
                 <td className="p-2 xl:p-5">

@@ -83,6 +83,12 @@ const ContainerAdminEditUser: FC = () => {
             errorToast("Failed to update image");
           }
         }
+        setIsLoading(false);
+        successToast(data.message);
+
+        setTimeout(() => {
+          router.push("/admin/user");
+        }, 1500);
       }
     } catch (err) {
       setIsLoading(false);

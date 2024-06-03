@@ -31,7 +31,7 @@ const Navbar: FC = () => {
     };
   }, []);
 
-  // Hamburger menu handler
+  // Hamburger menu handler8
   const hamburgerHandler = () => {
     const hamburger = document.querySelector("#hamburger");
     const navMenu = document.querySelector("#navMenu");
