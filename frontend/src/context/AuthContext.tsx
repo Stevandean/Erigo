@@ -37,7 +37,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const axios = useAxios(accessToken);
 
   useEffect(() => {
-    const _token = localStorage.getItem("access_token");
+    const _token = sessionStorage.getItem("access_token");
 
     if (_token) {
       setAccessToken(_token);
@@ -70,7 +70,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("access_token", accessToken || "");
+    sessionStorage.setItem("access_token", accessToken || "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 

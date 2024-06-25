@@ -107,7 +107,7 @@ const TableProduct: FC<Props> = ({ data, getData, isLoading }) => {
                       <img
                         src={
                           a?.pict
-                            ? `http://192.168.1.4:8000/storage/pict/${a?.pict}`
+                            ? `http://localhost:8000/storage/pict/${a.pict}`
                             : `https://ui-avatars.com/api/?name=${a?.product_name}`
                         }
                         alt="Avatar"

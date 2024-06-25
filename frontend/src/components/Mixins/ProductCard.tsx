@@ -24,7 +24,7 @@ const ProductCard: FC<Props> = ({ data, getData, isLoading }) => {
             <img
               src={
                 a?.pict
-                  ? `http://192.168.1.4:8000/storage/pict/${a?.pict}`
+                  ? `http://127.0.0.1:8000/storage/app/pict/${a?.pict}`
                   : `https://ui-avatars.com/api/?name=${a?.product_name}`
               }
               className="w-3/4 rounded-lg mb-5"

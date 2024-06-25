@@ -106,7 +106,7 @@ const TableUser: FC<Props> = ({ data, getData, isLoading }) => {
                       <img
                         src={
                           a?.pict
-                            ? `http://192.168.1.4:8000/storage/user/${a?.pict}`
+                            ? `http://127.0.0.1:8000/storage/user/${a?.pict}`
                             : `https://ui-avatars.com/api/?name=${a?.name}`
                         }
                         alt="Avatar"

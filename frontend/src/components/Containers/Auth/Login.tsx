@@ -17,7 +17,29 @@ const ContainerLogin: FC = () => {
   const axios = useAxios();
   const router = useRouter();
 
-  const handleSUbmit = async (e: FormEvent<HTMLFormElement>) => {
+  // const handleSUbmit = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   const sendData = { ...data };
+
+  //   try {
+  //     const { data } = await axios.post("auth/login", sendData);
+  //     successToast(data.message);
+  //     localStorage.setItem("access_token", data.authorization.token);
+
+  //     setTimeout(() => {
+  //       router.push("/");
+  //     }, 1500);
+  //   } catch (err) {
+  //     if (isAxiosError(err)) {
+  //       errorToast(err.response?.data?.message || "An error occurred");
+  //     } else {
+  //       errorToast("An unexpected error occurred");
+  //     }
+  //   }
+  // };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const sendData = { ...data };
@@ -25,7 +47,13 @@ const ContainerLogin: FC = () => {
     try {
       const { data } = await axios.post("auth/login", sendData);
       successToast(data.message);
-      localStorage.setItem("access_token", data.authorization.token);
+
+      // Menyimpan token ke sessionStorage
+      sessionStorage.setItem("access_token", data.authorization.token);
+
+      // Menyimpan waktu kadaluwarsa di localStorage
+      const expirationTime = new Date().getTime() + 2 * 7 * 24 * 60 * 60 * 1000; // 2 minggu dalam milidetik
+      localStorage.setItem("token_expiration", expirationTime.toString());
 
       setTimeout(() => {
         router.push("/");
@@ -38,6 +66,21 @@ const ContainerLogin: FC = () => {
       }
     }
   };
+
+  // Fungsi untuk memeriksa dan menghapus token jika sudah kadaluarsa
+  const checkTokenExpiration = () => {
+    const expirationTime = localStorage.getItem("token_expiration");
+    if (expirationTime) {
+      const now = new Date().getTime();
+      if (now > parseInt(expirationTime)) {
+        sessionStorage.removeItem("access_token");
+        localStorage.removeItem("token_expiration");
+      }
+    }
+  };
+
+  // Memeriksa token kadaluarsa setiap kali aplikasi dimuat
+  checkTokenExpiration();
 
   return (
     <main className="bg-[#F9FAFB] min-h-screen flex items-center justify-center">
@@ -52,7 +95,7 @@ const ContainerLogin: FC = () => {
           </h2>
         </div>
 
-        <form className="mt-[20px]" onSubmit={handleSUbmit}>
+        <form className="mt-[20px]" onSubmit={handleSubmit}>
           <div className="flex flex-col items-start mb-[20px]">
             <label htmlFor="email" className="font-medium text-sm mb-2">
               Email Address
